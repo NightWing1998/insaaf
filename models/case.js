@@ -11,7 +11,8 @@ let caseSchema = new mongoose.Schema({
 	},
 	caseNumber : {
 		type : Number,
-		required : true
+		required : true,
+		unique : true
 	},
 	penalCode :{
 		type : [Number],

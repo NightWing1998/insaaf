@@ -1,0 +1,7 @@
+// AUTHENTICATE USING A USER ADMIN FIRST
+use insaaf
+db.createUser({
+	user:"<name>",
+	pwd:passwordPrompt(),
+	roles:["readWrite"]
+})
