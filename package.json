@@ -4,7 +4,9 @@
   "description": "insaaf companion",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node .",
+    "server": "nodemon .",
+    "database": "mongod --config /usr/local/etc/mongod.conf",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,7 +21,12 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "mongoose": "^5.6.11",
+    "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
-    "natural": "^0.6.3"
+    "natural": "^0.6.3",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0"
   }
 }

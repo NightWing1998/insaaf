@@ -1,42 +1,51 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require('mongoose-unique-validator');
 
 let caseSchema = new mongoose.Schema({
-	apellant : {
-		type : String,
-		required : true
+	apellant: {
+		type: String,
+		required: true
 	},
-	respondent : {
-		type : String,
-		required : true
+	respondent: {
+		type: String,
+		required: true
 	},
-	caseNumber : {
-		type : Number,
-		required : true,
-		unique : true
+	caseNumber: {
+		type: Number,
+		required: true,
+		unique: true
 	},
-	penalCode :{
-		type : [Number],
-		required : true,
+	penalCode: {
+		type: [Number],
+		required: true,
 	},
-	suspect : {
-		type : [String],
-		required : true
+	suspect: {
+		type: [String],
+		required: true
 	},
-	evidence : [String],
-	witness : [String]
-})
+	evidence: [String],
+	witness: [String]
+}).set("toJSON", {
+	transform: (doc, returnObject) => {
+		returnObject.id = returnObject._id.toString();
+		delete returnObject._id;
+		delete returnObject.__v;
+	}
+});
 
-let caseModel = mongoose.model("case",caseSchema);
+caseSchema.plugin(uniqueValidator);
+
+let caseModel = mongoose.model("case", caseSchema);
 
 class Case {
-	static createCase(caseDetails,callback){
+	static create(caseDetails, callback) {
 		let c = new caseModel(caseDetails);
 		c.save()
 			.then(res => {
-				callback(undefined,res);
+				callback(undefined, res.toJSON());
 			})
-			.catch(err=>{
-				callback(err,undefined);
+			.catch(err => {
+				callback(err, undefined);
 			});
 	}
 }

@@ -1,8 +1,9 @@
 require("dotenv/config");
-const testString = "_TEST";
-function Constant(name){
-	if(process.env.NODE_ENV === 'TEST'){
-		return process.env[name+testString];
+const envString = "_" + process.env.NODE_ENV;
+
+function Constant(name) {
+	if (process.env.NODE_ENV !== "PRODUCTION") {
+		return process.env[name + envString];
 	}
 	return process.env[name];
 }
