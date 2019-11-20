@@ -3,8 +3,59 @@
 // REQUIRES :- database for case handling,jsonfication,etc
 
 const natural = require("natural");
+const sw = require("stopword");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
+
+const alhpa = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+const extractIPCSections = (tokens) => {
+	let ipc = [];
+	const searchParams = ["section", [
+		["indian", "penal", "code"], "ipc"
+	]];
+	let flag = false;
+	for (let i = 0; i < tokens.length; i++) {}
+	let iterator = 0,
+		tempIterator = 0,
+		searchIterator = 0;
+	for (let t of tokens) {
+		if (natural.PorterStemmer.stem(t.toLowerCase()) === searchParams[searchIterator] && !flag) {
+			flag = true;
+			tempIterator = iterator;
+			searchIterator++;
+			// console.log(flag);
+		} else if (flag && parseInt(t).toString() !== "NaN") {
+			ipc.push(parseInt(t));
+			tempIterator++;
+		} else if (flag) {
+			if (iterator - tempIterator > 1) {
+				flag = false;
+			} else {
+				break;
+			}
+		}
+		iterator++;
+	}
+	return ipc;
+}
+
+const extractCaseNo = (tokens) => {
+	let caseNo;
+	let Year;
+	let searchParams = ['case', 'no'];
+	let flag = true;
+	for (let i = 0; i < tokens.length && flag; i++) {
+		if (flag && tokens[i].toLowerCase() === searchParams[0] && tokens[i + 1].toLowerCase() === searchParams[1]) {
+			//console.log(tokens[i]);
+			flag = false;
+			caseNo = tokens[i + 2];
+			Year = tokens[i + 3];
+		}
+	}
+	// console.log(caseNo, Year);
+	return caseNo + "/" + Year;
+}
 
 /**
  * 
@@ -27,14 +78,30 @@ const preprocessor = async (casePathAndName) => {
 			return caseObj.text;
 		} catch (exception) {
 			console.error(">>>", exception);
+			throw exception;
 		}
 
 	}
 };
 
 const gistInJSON = async (casePathAndName) => {
-	await preprocessor();
-	return {}
+	try {
+		let textResponse = await preprocessor(casePathAndName);
+		const tokenizer = new natural.WordTokenizer();
+		let tokens = tokenizer.tokenize(textResponse);
+		// console.log(tokens);
+
+		tokens = sw.removeStopwords(sw.removeStopwords(tokens), alhpa.split(""));
+		// console.log(tokens);
+		return {
+			penalCodes: extractIPCSections(tokens),
+			caseNumber: extractCaseNo(tokens)
+		};
+	} catch (exception) {
+		console.log(exception);
+		throw exception;
+	}
+
 };
 
 /**
@@ -42,7 +109,12 @@ const gistInJSON = async (casePathAndName) => {
  * @param {String} casePathAndName 
  */
 const extractor = async (casePathAndName) => {
-	return await gistInJSON(casePathAndName);
+	try {
+		return await gistInJSON(casePathAndName);
+	} catch (exception) {
+		throw exception;
+	}
+
 }
 
 module.exports = extractor;

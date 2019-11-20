@@ -41,8 +41,8 @@ app.use(express.json({}));
 
 app.post("/case", upload.single("case"), async (req, res) => {
 	let {
-		apellant,
-		respondent,
+		prosecution,
+		accused,
 		caseNumber,
 		penalCode,
 		suspect,
@@ -57,23 +57,29 @@ app.post("/case", upload.single("case"), async (req, res) => {
 	// evidence = typeof evidence !== 'undefined' ? evidence.split(",") : [""];
 	// witness = typeof witness !== 'undefined' ? witness.split(",") : [""];
 	// console.log("!", apellant, "@", respondent, "#", caseNumber, "$", penalCode, "%", suspect, "^", evidence, "&", witness);
-	let gist = await gistExtractor(path);
-	console.log("@@@", gist);
-	res.status(201).json({
-		message: "gist created"
-	});
-	// Case.create({
-	// 	apellant,
-	// 	respondent,
-	// 	caseNumber,
-	// 	penalCode,
-	// 	suspect,
-	// 	witness,
-	// 	evidence
-	// }, (err, response) => {
-	// 	if (err) res.status(500).json(err)
-	// 	else res.status(201).json(response);
-	// });
+	try {
+		let gist = await gistExtractor(path);
+		console.log("@@@", gist);
+		res.status(201).json({
+			message: "gist created",
+			gist
+		});
+		// Case.create({
+		// 	apellant,
+		// 	respondent,
+		// 	caseNumber,
+		// 	penalCode,
+		// 	suspect,
+		// 	witness,
+		// 	evidence
+		// }, (err, response) => {
+		// 	if (err) res.status(500).json(err)
+		// 	else res.status(201).json(response);
+		// });
+	} catch (exception) {
+		res.status(500).send(exception.toString());
+	}
+
 });
 
 app.get("*", (req, res) => {

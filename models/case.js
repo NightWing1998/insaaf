@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const uniqueValidator = require('mongoose-unique-validator');
 
 let caseSchema = new mongoose.Schema({
-	apellant: {
+	prosecution: {
 		type: String,
 		required: true
 	},
-	respondent: {
+	accused: {
 		type: String,
 		required: true
 	},
@@ -20,6 +20,10 @@ let caseSchema = new mongoose.Schema({
 		required: true,
 	},
 	suspect: {
+		type: [String],
+		required: true
+	},
+	victim: {
 		type: [String],
 		required: true
 	},
