@@ -40,15 +40,15 @@ app.use(express.json({}));
 // app.use(upload.array());
 
 app.post("/case", upload.single("case"), async (req, res) => {
-	let {
-		prosecution,
-		accused,
-		caseNumber,
-		penalCode,
-		suspect,
-		evidence,
-		witness
-	} = req.body;
+	// let {
+	// 	prosecution,
+	// 	accused,
+	// 	caseNumber,
+	// 	penalCode,
+	// 	suspect,
+	// 	evidence,
+	// 	witness
+	// } = req.body;
 	console.log(req.file);
 	let path = req.file.path;
 	delete req.file;
@@ -64,7 +64,7 @@ app.post("/case", upload.single("case"), async (req, res) => {
 			message: "gist created",
 			gist
 		});
-		// Case.create({
+		// Case.save({
 		// 	apellant,
 		// 	respondent,
 		// 	caseNumber,
@@ -95,6 +95,7 @@ app.listen(constant("PORT"), constant("IP"), async (err) => {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
+		useFindAndModify: false,
 	};
 	mongoose.connect(mongoUri, mongoConnectionOptions,
 		(dbErr) => {
