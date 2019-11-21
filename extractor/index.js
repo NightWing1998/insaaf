@@ -6,6 +6,7 @@ const natural = require("natural");
 const sw = require("stopword");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
+const pos = require('pos');
 
 let commonStopwords = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri", "Smt");
@@ -58,6 +59,39 @@ const extractCaseNo = (tokens) => {
 	return caseNo + "/" + Year;
 }
 
+
+const extractVictim = (tokens) => {
+	let victim;
+	let nouns = ['body', 'stone', 'head'];
+	tokens = sw.removeStopwords(tokens, nouns);
+	let searchParams = ['deceased', 'killed', 'murdered', 'death'];
+	flag = true;
+	for (let i = 0; i < tokens.length && flag; i++) {
+		if (searchParams.includes(tokens[i].toLowerCase())) {
+			sentence = '';
+			for (let j = i - 1; j < i + 2 && flag; j++) {
+				sentence = sentence + ' ' + tokens[j];
+			}
+			const words = new pos.Lexer().lex(sentence);
+			const tagger = new pos.Tagger();
+			const taggedWords = tagger.tag(words);
+			if (flag) {
+				for (k in taggedWords) {
+					var taggedWord = taggedWords[k];
+					var word = taggedWord[0];
+					var tag = taggedWord[1];
+					// console.log(word + " /" + tag);
+					if (tag == 'NN' && flag && !searchParams.includes(word) && !nouns.includes(word)) {
+						flag = !flag;
+						victim = word;
+					}
+				}
+			}
+		}
+	}
+	return victim;
+}
+
 /**
  * 
  * @param {String} casePathAndName 
@@ -93,7 +127,7 @@ const gistInJSON = async (casePathAndName) => {
 		let textResponse = await preprocessor(casePathAndName);
 		const tokenizer = new natural.WordTokenizer();
 		let tokens = tokenizer.tokenize(textResponse);
-		// console.log(tokens);
+		//console.log(tokens);
 
 		tokens = sw.removeStopwords(sw.removeStopwords(tokens), commonStopwords);
 		// console.log(tokens);
@@ -101,7 +135,7 @@ const gistInJSON = async (casePathAndName) => {
 			penalCodes: extractIPCSections(tokens.slice(0, 500)),
 			caseNumber: extractCaseNo(tokens.slice(0, 200)),
 			prosecution: "the state",
-			victim: "Smita"
+			victim: extractVictim(tokens)
 			// accused: extractAccused(tokens.slice(0, 100)),
 		};
 	} catch (exception) {
