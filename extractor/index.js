@@ -7,7 +7,8 @@ const sw = require("stopword");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 
-const alhpa = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+let commonStopwords = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri", "Smt");
 
 const extractIPCSections = (tokens) => {
 	let ipc = [];
@@ -76,7 +77,7 @@ const preprocessor = async (casePathAndName) => {
 			fs.writeFileSync(casePathAndName, caseObj.text);
 			return caseObj.text;
 		} else if (dotSeperated[dotSeperated.length - 1] === "txt") {
-			return fs.readFileSync(casePathAndName);
+			return fs.readFileSync(casePathAndName).toString();
 		} else {
 			throw new Error("Invalid file extnsion " + dotSeperated[dotSeperated.length - 1] + "The file extension should be pdf or txt.")
 		}
@@ -94,7 +95,7 @@ const gistInJSON = async (casePathAndName) => {
 		let tokens = tokenizer.tokenize(textResponse);
 		// console.log(tokens);
 
-		tokens = sw.removeStopwords(sw.removeStopwords(tokens), alhpa.split(""));
+		tokens = sw.removeStopwords(sw.removeStopwords(tokens), commonStopwords);
 		// console.log(tokens);
 		return {
 			penalCodes: extractIPCSections(tokens.slice(0, 500)),
