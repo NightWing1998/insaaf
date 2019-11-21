@@ -4,10 +4,10 @@
   "description": "insaaf companion",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "server": "nodemon .",
+    "start": "cross-env NODE_ENV=PRODUCTION node .",
+    "server": "cross-env NODE_ENV=DEVELOPMENT nodemon .",
     "database": "mongod --config /usr/local/etc/mongod.conf",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=TEST jest --verbose",
     "watch": "npm run database & npm run server"
   },
   "keywords": [
@@ -28,7 +28,8 @@
     "natural": "^0.6.3",
     "pdf-parse": "^1.1.1",
     "pos": "^0.4.2",
-    "stopword": "^0.3.4"
+    "stopword": "^0.3.4",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "eslint": "^6.6.0"

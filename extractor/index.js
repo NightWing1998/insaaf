@@ -61,7 +61,7 @@ const extractCaseNo = (tokens) => {
 
 
 const extractVictim = (tokens) => {
-	let victim;
+	let victim = [];
 	let nouns = ['body', 'stone', 'head', 'son', 'daughter', 'husband', 'wife'];
 	tokens = sw.removeStopwords(tokens, nouns);
 	let searchParams = ['deceased', 'killed', 'murdered', 'death'];
@@ -83,7 +83,7 @@ const extractVictim = (tokens) => {
 					// console.log(word + " /" + tag);
 					if (tag == 'NN' && flag && !searchParams.includes(word) && !nouns.includes(word)) {
 						flag = !flag;
-						victim = word;
+						victim = [word];
 					}
 				}
 			}

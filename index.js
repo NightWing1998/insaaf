@@ -1,93 +1,14 @@
-// THIS PAGE HANDLES ROUTES
 const
-	express = require("express"),
-	app = express(),
+	app = require("./app"),
+	http = require("http"),
 	mongoose = require("mongoose"),
-	constant = require("./constants"),
-	multer = require("multer"),
-	gistExtractor = require("./extractor/index"),
-	fs = require("fs");
+	constant = require("./constants");
 
 const mongoUri = constant("DATABASE");
 
-const Case = require("./models/case");
+let server = http.createServer(app);
 
-const caseFilterer = (req, file, callback) => {
-	if (file.mimetype !== "application/pdf" || file.mimetype !== "text/plain") {
-		callback(null, false);
-	}
-	callback(null, true);
-};
-
-const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, 'case_files/')
-	},
-	filename: function (req, file, cb) {
-		cb(null, file.originalname)
-	}
-});
-
-const upload = multer({
-	fileFilter: caseFilterer,
-	storage: storage
-});
-
-app.use(express.urlencoded({
-	extended: false
-}));
-app.use(express.json({}));
-// app.use(upload.array());
-
-app.post("/case", upload.single("case"), async (req, res) => {
-	// let {
-	// 	prosecution,
-	// 	accused,
-	// 	caseNumber,
-	// 	penalCode,
-	// 	suspect,
-	// 	evidence,
-	// 	witness
-	// } = req.body;
-	console.log(req.file);
-	let path = req.file.path;
-	delete req.file;
-	// penalCode = penalCode.split(",").map(Number);
-	// suspect = suspect.split(",");
-	// evidence = typeof evidence !== 'undefined' ? evidence.split(",") : [""];
-	// witness = typeof witness !== 'undefined' ? witness.split(",") : [""];
-	// console.log("!", apellant, "@", respondent, "#", caseNumber, "$", penalCode, "%", suspect, "^", evidence, "&", witness);
-	try {
-		let gist = await gistExtractor(path);
-		console.log("@@@", gist);
-		res.status(201).json({
-			message: "gist created",
-			gist
-		});
-		// Case.save({
-		// 	apellant,
-		// 	respondent,
-		// 	caseNumber,
-		// 	penalCode,
-		// 	suspect,
-		// 	witness,
-		// 	evidence
-		// }, (err, response) => {
-		// 	if (err) res.status(500).json(err)
-		// 	else res.status(201).json(response);
-		// });
-	} catch (exception) {
-		res.status(500).send(exception.toString());
-	}
-
-});
-
-app.get("*", (req, res) => {
-	console.log(req.connection.remoteAddress);
-	res.status(404).send("<h1>Page missing!!</h1>");
-});
-
-app.listen(constant("PORT"), constant("IP"), async (err) => {
+server.listen(constant("PORT"), constant("IP"), async (err) => {
 	if (err) throw err;
 	console.log("Server started successfully on port ", constant("PORT"));
 	// console.log(constant("PORT"),mongoUri,constant("DATABASE_PASSWORD"));
