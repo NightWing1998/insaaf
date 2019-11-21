@@ -6,6 +6,7 @@ const natural = require("natural");
 const sw = require("stopword");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
+const pos = require('pos');
 
 const alhpa = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -57,6 +58,72 @@ const extractCaseNo = (tokens) => {
 	return caseNo + "/" + Year;
 }
 
+
+const extractVictim = (tokens) =>{
+	let victim;
+	let nouns=['body','stone','head'];
+	let searchParams=['deceased','killed','murdered','death'];
+	flag=true;
+	for(let i = 0; i < tokens.length && flag; i++){
+		if(searchParams.includes(tokens[i].toLowerCase())){
+			sentence = '';
+			for(let j=i-1 ; j< i+2 && flag ; j++){
+				sentence = sentence + ' ' +tokens[j];
+			}
+			const words = new pos.Lexer().lex(sentence);
+			const tagger = new pos.Tagger();
+			const taggedWords = tagger.tag(words);
+			if(flag){
+				for (k in taggedWords) {
+					var taggedWord = taggedWords[k];
+					var word = taggedWord[0];
+					var tag = taggedWord[1];
+					console.log(word + " /" + tag);
+					if(tag=='NN' && flag && !searchParams.includes(word) && !nouns.includes(word)){
+						flag=!flag;
+						victim=word;
+					}
+				}
+			}
+		}
+	}
+	return victim;
+}
+
+
+/**const extractVictim = (tokens) =>{
+	let victim;
+	let searchParams=['deceased','killed','murdered'];
+	for(let i = 0; i < tokens.length; i++){
+		if(searchParams.includes(tokens[i].toLowerCase())){
+			console.log(tokens[i+1]);
+			victim=tokens[i+1];
+			break;
+		}
+	}
+	return victim;
+}*/
+
+
+const extractAccused= (tokens) =>{
+	let accused;
+	let searchParams=['v','s'];
+	let flag1=true;
+	let flag2=false;
+	let string;
+	for(let i = 0; i < tokens.length && tokens[i].toLowerCase()!='judgement' && flag1; i++){
+		if(!flag2 && tokens[i].toLowerCase()===searchParams[0] && tokens[i+1].toLowerCase()===searchParams[1]){
+			flag2=true;
+		}
+		if(flag2){
+			i++;
+			i++;
+
+		}
+	}
+	return accused;
+}
+
 /**
  * 
  * @param {String} casePathAndName 
@@ -76,7 +143,7 @@ const preprocessor = async (casePathAndName) => {
 			fs.writeFileSync(casePathAndName, caseObj.text);
 			return caseObj.text;
 		} else if (dotSeperated[dotSeperated.length - 1] === "txt") {
-			return fs.readFileSync(casePathAndName);
+			return fs.readFileSync(casePathAndName).toString();
 		} else {
 			throw new Error("Invalid file extnsion " + dotSeperated[dotSeperated.length - 1] + "The file extension should be pdf or txt.")
 		}
@@ -92,15 +159,15 @@ const gistInJSON = async (casePathAndName) => {
 		let textResponse = await preprocessor(casePathAndName);
 		const tokenizer = new natural.WordTokenizer();
 		let tokens = tokenizer.tokenize(textResponse);
-		// console.log(tokens);
+		//console.log(tokens);
 
-		tokens = sw.removeStopwords(sw.removeStopwords(tokens), alhpa.split(""));
-		// console.log(tokens);
+		tokens = sw.removeStopwords(sw.removeStopwords(tokens, alhpa.split("")));
+		console.log(tokens);
 		return {
 			penalCodes: extractIPCSections(tokens.slice(0, 500)),
 			caseNumber: extractCaseNo(tokens.slice(0, 200)),
 			prosecution: "the state",
-			victim: "Smita"
+			victim: extractVictim(tokens)
 			// accused: extractAccused(tokens.slice(0, 100)),
 		};
 	} catch (exception) {
