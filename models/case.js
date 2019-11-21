@@ -39,28 +39,4 @@ let caseSchema = new mongoose.Schema({
 
 caseSchema.plugin(uniqueValidator);
 
-let caseModel = mongoose.model("case", caseSchema);
-
-class Case {
-	static create(caseDetails, callback) {
-		let c = new caseModel(caseDetails);
-		c.save()
-			.then(res => {
-				callback(undefined, res.toJSON());
-			})
-			.catch(err => {
-				callback(err, undefined);
-			});
-	}
-}
-// constructor(db){
-// 	this.collection = db.collection("case");
-// }
-// async createCase(caseFeatures,callback){
-// 	this.collection.insert(caseFeatures,(err,res)=>{
-// 		if(err) throw err;
-// 		console.log(res);
-// 	});
-// }
-
-module.exports = Case;
+module.exports = mongoose.model("case", caseSchema);

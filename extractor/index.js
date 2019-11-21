@@ -62,11 +62,10 @@ const extractCaseNo = (tokens) => {
  * @param {String} casePathAndName 
  */
 const preprocessor = async (casePathAndName) => {
-	let dotSeperated = casePathAndName.split(".");
-	if (dotSeperated[dotSeperated.length - 1] === "pdf") {
-		// convert pdf to txt document.
-
-		try {
+	try {
+		let dotSeperated = casePathAndName.split(".");
+		if (dotSeperated[dotSeperated.length - 1] === "pdf") {
+			// convert pdf to txt document.
 			console.log(casePathAndName);
 			const casePdf = fs.readFileSync(casePathAndName);
 			// console.log(casePdf);
@@ -76,12 +75,16 @@ const preprocessor = async (casePathAndName) => {
 
 			fs.writeFileSync(casePathAndName, caseObj.text);
 			return caseObj.text;
-		} catch (exception) {
-			console.error(">>>", exception);
-			throw exception;
+		} else if (dotSeperated[dotSeperated.length - 1] === "txt") {
+			return fs.readFileSync(casePathAndName);
+		} else {
+			throw new Error("Invalid file extnsion " + dotSeperated[dotSeperated.length - 1] + "The file extension should be pdf or txt.")
 		}
-
+	} catch (exception) {
+		console.error(">>>", exception);
+		throw exception;
 	}
+
 };
 
 const gistInJSON = async (casePathAndName) => {
@@ -94,11 +97,14 @@ const gistInJSON = async (casePathAndName) => {
 		tokens = sw.removeStopwords(sw.removeStopwords(tokens), alhpa.split(""));
 		// console.log(tokens);
 		return {
-			penalCodes: extractIPCSections(tokens),
-			caseNumber: extractCaseNo(tokens)
+			penalCodes: extractIPCSections(tokens.slice(0, 500)),
+			caseNumber: extractCaseNo(tokens.slice(0, 200)),
+			prosecution: "the state",
+			victim: "Smita"
+			// accused: extractAccused(tokens.slice(0, 100)),
 		};
 	} catch (exception) {
-		console.log(exception);
+		// console.log(exception);
 		throw exception;
 	}
 
