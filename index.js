@@ -20,7 +20,7 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 	};
 	mongoose.connect(mongoUri, mongoConnectionOptions,
 		(dbErr) => {
-			if (dbErr) console.log(dbErr);
+			if (dbErr) console.log(mongoUri, dbErr);
 			else console.log("Connected to database ", mongoUri);
 		}
 	);

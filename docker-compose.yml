@@ -1,17 +1,25 @@
 # exposes port 80 of the application to localhost:80 inside app services
-version: '3'
+version: "2"
 services:
   app:
-    container_name: docker-node-mongo
+    container_name: insaaf
     restart: always
     build: .
     ports:
-      - '80:80'
-      - '443:443'
+      - "8080:8080"
     links:
       - mongo
+    environment:
+      - DATABASE="mongodb://mongo/insaaf"
+      - DATABASE_TEST="mongodb://mongo/insaaf-test"
+      - DATABASE_DEVELOPMENT="mongodb://mongo/insaaf-dev"
+      - PORT=8080
+      - PORT_DEVELOPMENT=8080
+      - PORT_TEST=8080
+    volumes:
+      - .:/usr/src/app
   mongo:
     container_name: mongo
     image: mongo:4.2.0
     ports:
-      - '27017:27017'
+      - "27017:27017"
