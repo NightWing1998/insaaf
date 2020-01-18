@@ -6,27 +6,27 @@ let caseSchema = new mongoose.Schema({
 		type: String,
 		// required: true
 	},
-	accused: {
+	accused: [{
 		type: String,
 		// required: true
-	},
+	}],
 	caseNumber: {
 		type: String,
 		required: true,
 		unique: true
 	},
-	penalCode: {
-		type: [Number],
+	penalCode: [{
+		type: Number,
 		required: true,
-	},
-	suspect: {
-		type: [String],
+	}],
+	suspect: [{
+		type: String,
 		// required: true
-	},
-	victim: {
-		type: [String],
+	}],
+	victim: [{
+		type: String,
 		// required: true
-	},
+	}],
 	evidence: [String],
 	witness: [String]
 }).set("toJSON", {

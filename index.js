@@ -2,7 +2,8 @@ const
 	app = require("./app"),
 	http = require("http"),
 	mongoose = require("mongoose"),
-	constant = require("./constants");
+	constant = require("./constants"),
+	Case = require("./models/case");
 
 const mongoUri = constant("DATABASE");
 
@@ -22,6 +23,7 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 		(dbErr) => {
 			if (dbErr) console.log(mongoUri, dbErr);
 			else console.log("Connected to database ", mongoUri);
+			Case.deleteMany({}).then(res => console.log("Cleared Cases", res));
 		}
 	);
 });

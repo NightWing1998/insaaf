@@ -92,6 +92,32 @@ const extractVictim = (tokens) => {
 	return victim;
 }
 
+const extractAccused = (text) => {
+	let accused = [];
+	const vsRegEx = /(v|V)(((\.|\/)?(s|S)\.?)|(ersus.?))/;
+	const aRegEx = /(a|A)ccused/;
+	let i = text.search(vsRegEx);
+	let j = text.search(aRegEx);
+	let tokens = text.slice(i, j).replace(" ", "").split("\n").slice(1);
+	// console.log(tokens);
+	let aInt = 0;
+	if (tokens[0][0] == (aInt + 1)) {
+		for (i = 0; i < tokens.length; i++) {
+			// console.log("!", tokens[i][0] == (aInt + 1));
+			if (tokens[i][0] == (aInt + 1)) {
+				aInt++;
+				// console.log(tokens[i]);
+				let temp = tokens[i].replace(/(\d| |\.|]|\))*/, "");
+				// console.log("##", temp);
+				accused.push(temp);
+			}
+		}
+	} else {
+		accused.push(tokens[0]);
+	}
+	return accused;
+}
+
 /**
  * 
  * @param {String} casePathAndName 
@@ -127,7 +153,7 @@ const gistInJSON = async (casePathAndName) => {
 		let textResponse = await preprocessor(casePathAndName);
 		const tokenizer = new natural.WordTokenizer();
 		let tokens = tokenizer.tokenize(textResponse);
-		//console.log(tokens);
+		// console.log(tokens.slice(0, 200));
 
 		tokens = sw.removeStopwords(sw.removeStopwords(tokens), commonStopwords);
 		// console.log(tokens);
@@ -135,8 +161,8 @@ const gistInJSON = async (casePathAndName) => {
 			penalCodes: extractIPCSections(tokens.slice(0, 500)),
 			caseNumber: extractCaseNo(tokens.slice(0, 200)),
 			prosecution: "the state",
-			victim: extractVictim(tokens)
-			// accused: extractAccused(tokens.slice(0, 100)),
+			victim: extractVictim(tokens),
+			accused: extractAccused(textResponse),
 		};
 	} catch (exception) {
 		// console.log(exception);

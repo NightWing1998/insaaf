@@ -46,7 +46,8 @@ app.post("/case", upload.single("case"), async (req, res) => {
 			prosecution: gist.prosecution,
 			caseNumber: gist.caseNumber,
 			victim: gist.victim,
-			penalCode: gist.penalCodes
+			penalCode: gist.penalCodes,
+			accused: gist.accused
 		});
 		let savedCase = await newCase.save();
 		res.status(201).json(savedCase.toJSON());
