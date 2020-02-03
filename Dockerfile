@@ -1,13 +1,13 @@
-FROM node:10-alpine
+FROM node:13.6.0-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY . .
 
 RUN npm install
 
-COPY . .
-
+ENV PORT=8080
+ENV NODE_ENV=PRODUCTION
 # exposes port 8080 of the application to localhost:80
 EXPOSE 8080
 

@@ -2,3 +2,4 @@ node-modules
 npm-debug*.log
 *.mongoshell
 .env
+db/

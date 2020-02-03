@@ -65,3 +65,5 @@ case_files/
 *.pdf
 
 *.txt
+
+db/

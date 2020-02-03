@@ -4,10 +4,10 @@
   "description": "insaaf companion",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=PRODUCTION nodemon .",
-    "server": "cross-env NODE_ENV=DEVELOPMENT nodemon .",
+    "start": "node .",
+    "server": "NODE_ENV=DEVELOPMENT nodemon .",
     "database": "mongod --config /usr/local/etc/mongod.conf",
-    "test": "cross-env NODE_ENV=TEST jest --verbose",
+    "test": "NODE_ENV=TEST jest --verbose",
     "watch": "npm run database & npm run server"
   },
   "keywords": [
@@ -18,22 +18,22 @@
   "author": "NightWing1998",
   "license": "MIT",
   "dependencies": {
-    "cookie-parser": "^1.4.4",
-    "cross-env": "^6.0.3",
-    "dotenv": "^8.1.0",
     "express": "^4.17.1",
-    "jest": "^24.9.0",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^8.1.0",
     "mongoose": "^5.6.11",
     "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
     "natural": "^0.6.3",
-    "nodemon": "^2.0.2",
     "pdf-parse": "^1.1.1",
     "pos": "^0.4.2",
     "stopword": "^0.3.4",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
-    "eslint": "^6.6.0"
+    "eslint": "^6.6.0",
+    "jest": "^24.9.0",
+    "nodemon": "^2.0.2",
+    "cross-env": "^6.0.3"
   }
 }
