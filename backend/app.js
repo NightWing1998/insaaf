@@ -2,9 +2,9 @@
 const
 	express = require("express"),
 	app = express(),
-	constant = require("./constants"),
 	multer = require("multer"),
-	gistExtractor = require("./extractor/index");
+	gistExtractor = require("./extractor/index"),
+	middleware = require("./utils/middleware");
 
 const Case = require("./models/case");
 
@@ -35,13 +35,13 @@ app.use(express.urlencoded({
 app.use(express.json({}));
 // app.use(upload.array());
 
-app.post("/case", upload.single("case"), async (req, res) => {
-	console.log(req.file);
+app.use(middleware.requestLogger);
+
+app.post("/api/case", upload.single("case"), async (req, res, next) => {
 	let path = req.file.path;
 	delete req.file;
 	try {
 		let gist = await gistExtractor(path);
-		console.log("@@@", gist);
 		let newCase = new Case({
 			prosecution: gist.prosecution,
 			caseNumber: gist.caseNumber,
@@ -52,14 +52,47 @@ app.post("/case", upload.single("case"), async (req, res) => {
 		let savedCase = await newCase.save();
 		res.status(201).json(savedCase.toJSON());
 	} catch (exception) {
-		res.status(500).send(exception.toString());
+		next(exception);
 	}
 
 });
 
-app.get("*", (req, res) => {
-	console.log(req.connection.remoteAddress);
-	res.status(404).send("<h1>Page missing!!</h1>");
+app.put("/api/case/:id", async (req, res, next) => {
+	const caseId = req.params.id;
+	try {
+		const caseFile = await Case.findById(caseId);
+		let updatedCaseFile = caseFile.toJSON();
+		const {
+			prosecution,
+			caseNumber,
+			victim,
+			penalCode,
+			accused
+		} = req.body;
+		if (prosecution) {
+			updatedCaseFile["prosecution"] = prosecution;
+		}
+		if (caseNumber) {
+			updatedCaseFile["caseNumber"] = caseNumber;
+		}
+		if (victim) {
+			updatedCaseFile["victim"] = victim;
+		}
+		if (penalCode) {
+			updatedCaseFile["penalCode"] = penalCode;
+		}
+		if (accused) {
+			updatedCaseFile["accused"] = accused;
+		}
+		caseFile.update(updatedCaseFile);
+		res.status(201).json(caseFile.toJSON());
+	} catch (exception) {
+		next(exception);
+	}
+
 });
+
+app.use(middleware.MongooseErrorHandler);
+app.use(middleware.unknownEndpoint);
 
 module.exports = app;

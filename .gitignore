@@ -67,3 +67,7 @@ case_files/
 *.txt
 
 db/
+
+.DS_Store
+
+.vscode

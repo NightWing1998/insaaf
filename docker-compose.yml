@@ -1,8 +1,8 @@
 # exposes port 80 of the application to localhost:80 inside app services
 version: "3"
 services:
-  app:
-    container_name: insaaf
+  backend:
+    container_name: backend
     build: "./backend"
     ports:
       - "8080:8080"
@@ -16,13 +16,13 @@ services:
       - PORT_DEVELOPMENT=8080
       - PORT_TEST=8080
       - NODE_ENV=PRODUCTION
-  web:
-    container_name: web
+  frontend:
+    container_name: frontend
     build: "./web"
     ports:
       - "8081:3000"
     links:
-      - app
+      - backend
   mongo:
     container_name: mongo
     image: mongo:4.2.0
