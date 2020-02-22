@@ -142,7 +142,7 @@ function App() {
 					<Form.Field>
 						<label htmlFor="opp">Opportunity</label>
 						<Divider />
-						<Radio toggle checked={gist["oppurtunity"] | false} onChange={() => updateGistPart(!gist["motive"], "oppurtunity")} />
+						<Radio toggle checked={gist["oppurtunity"] | false} onChange={() => updateGistPart(!gist["oppurtnity"], "oppurtunity")} />
 					</Form.Field>
 					<Form.Field>
 						<label htmlFor="guilty">Guilty</label>

@@ -3,5 +3,5 @@ build:
     web: web/Dockerfile
     backend: backend/Dockerfile
 run:
-  web: npm start
+  web: docker run --it -p 80:$PORT web
   backend: npm start

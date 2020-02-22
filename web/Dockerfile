@@ -6,7 +6,7 @@ COPY . .
 
 RUN npm install
 
-# exposes port 8080 of the application to localhost:80
+# expose port 3000 of the application to localhost:80
 EXPOSE 3000
 
 CMD npm start
