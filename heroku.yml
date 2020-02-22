@@ -2,6 +2,8 @@ build:
   docker:
     web: web/Dockerfile
     backend: backend/Dockerfile
+  config:
+    SERVER_URL: http://backend/
 run:
-  web: docker run --it -p 80:$PORT web
+  web: npm start
   backend: npm start
