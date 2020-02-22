@@ -1,0 +1,12 @@
+build:
+  docker:
+    web: web/Dockerfile
+    backend: backend/Dockerfile
+    mongo: mongo:4.2.0
+  config:
+    DATABASE: mongodb://mongo/insaaf
+    NODE_ENV: PRODUCTION
+run:
+  mongo: mongod --bind-ip 0.0.0.0
+  web: npm start
+  backend: npm start

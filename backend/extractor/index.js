@@ -94,12 +94,11 @@ const extractVictim = (tokens) => {
 
 const extractAccused = (text) => {
 	let accused = [];
-	const vsRegEx = /(v|V)(((\.|\/)?(s|S)\.?)|(ersus.?))/;
+	const vsRegEx = /(v|V)(((\.|\/)?(s|S)\.?)|(ers(u|e)s.?))/;
 	const aRegEx = /(a|A)ccused/;
 	let i = text.search(vsRegEx);
 	let j = text.search(aRegEx);
 	let tokens = text.slice(i, j).replace(" ", "").split("\n").slice(1);
-	// console.log(tokens);
 	let aInt = 0;
 	if (tokens[0][0] == (aInt + 1)) {
 		for (i = 0; i < tokens.length; i++) {

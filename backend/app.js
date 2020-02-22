@@ -4,7 +4,8 @@ const
 	app = express(),
 	multer = require("multer"),
 	gistExtractor = require("./extractor/index"),
-	middleware = require("./utils/middleware");
+	middleware = require("./utils/middleware"),
+	fs = require("fs");
 
 const Case = require("./models/case");
 
@@ -57,39 +58,101 @@ app.post("/api/case", upload.single("case"), async (req, res, next) => {
 
 });
 
+app.get("/api/case", async (req, res, next) => {
+	try {
+		const cases = await Case.find({});
+		res.status(200).json({
+			cases
+		});
+	} catch (e) {
+		next(e);
+	}
+});
+
+app.get("/api/case/:id", async (req, res, next) => {
+	const id = req.params.id;
+	try {
+		const caseFile = (await Case.findById(id)).toJSON();
+		res.status(200).json(caseFile);
+	} catch (e) {
+		next(e);
+	}
+});
+
 app.put("/api/case/:id", async (req, res, next) => {
 	const caseId = req.params.id;
 	try {
-		const caseFile = await Case.findById(caseId);
-		let updatedCaseFile = caseFile.toJSON();
-		const {
-			prosecution,
-			caseNumber,
-			victim,
-			penalCode,
-			accused
-		} = req.body;
-		if (prosecution) {
-			updatedCaseFile["prosecution"] = prosecution;
-		}
-		if (caseNumber) {
-			updatedCaseFile["caseNumber"] = caseNumber;
-		}
-		if (victim) {
-			updatedCaseFile["victim"] = victim;
-		}
-		if (penalCode) {
-			updatedCaseFile["penalCode"] = penalCode;
-		}
-		if (accused) {
-			updatedCaseFile["accused"] = accused;
-		}
-		caseFile.update(updatedCaseFile);
-		res.status(201).json(caseFile.toJSON());
+		let updatedCaseFile = await Case.findByIdAndUpdate(caseId, req.body, {
+			new: true
+		});
+		let temp = updatedCaseFile.toJSON()
+		console.log(temp);
+		res.status(201).json(temp);
 	} catch (exception) {
 		next(exception);
 	}
 
+});
+
+app.delete("/api/case/:id", async (req, res, next) => {
+	const caseid = req.params.id;
+	try {
+		await Case.findByIdAndDelete(caseid);
+		res.status(204).end();
+	} catch (e) {
+		next(e);
+	}
+});
+
+app.get("/api/file", async (req, res, next) => {
+	try {
+		const cases = await Case.find({});
+		let csvTypes = new Set();
+		cases.forEach(c => {
+			c.evidence.for.forEach(ef => {
+				if (ef !== "") {
+					csvTypes.add(ef.toLowerCase().replace(".", "").replace(" ", "_"))
+				}
+			});
+			c.evidence.against.forEach(ea => {
+				if (ea !== "") {
+					csvTypes.add(ea.toLowerCase().replace(".", "").replace(" ", "_"))
+				}
+			});
+		});
+		let csvFile = "number,means,motive,oppurtunity,witnessFor,witnessAgainst";
+		let temp = [...csvTypes.values()];
+		console.log(temp.join(","));
+		if (temp.length !== 0) {
+			csvFile += "," + temp.join(",")
+		}
+		csvFile += ",guilty\n";
+		cases.forEach(c => {
+			csvFile += c.caseNumber + ",";
+			csvFile += c.means ? "yes," : "no,";
+			csvFile += c.motive ? "yes," : "no,";
+			csvFile += c.oppurtunity ? "yes," : "no,";
+			csvFile += c.witness.for ? c.witness.for.toString() + "," : "0,";
+			csvFile += c.witness.against ? c.witness.against.toString() + "," : "0,";
+			console.log(c.evidence.for, c.evidence.against);
+			csvTypes.forEach(ct => {
+				if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
+					csvFile += "1,";
+				} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
+					csvFile += "-1,";
+				} else {
+					csvFile += "0,";
+				}
+			});
+			csvFile += c.guilty ? "yes\n" : "no\n";
+		});
+		console.log(csvFile);
+		fs.writeFileSync("./train.csv", csvFile);
+		res.download("./train.csv");
+		// res.send(csvFile);
+	} catch (e) {
+		next(e);
+	}
 });
 
 app.use(middleware.MongooseErrorHandler);

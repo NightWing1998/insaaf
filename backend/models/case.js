@@ -19,16 +19,34 @@ let caseSchema = new mongoose.Schema({
 		type: Number,
 		required: true,
 	}],
-	suspect: [{
-		type: String,
-		// required: true
-	}],
 	victim: [{
 		type: String,
 		// required: true
 	}],
-	evidence: [String],
-	witness: [String]
+	evidence: {
+		for: [String],
+		against: [String]
+	},
+	witness: {
+		for: Number,
+		against: Number
+	},
+	motive: {
+		type: Boolean,
+		default: false
+	},
+	means: {
+		type: Boolean,
+		default: false
+	},
+	oppurtunity: {
+		type: Boolean,
+		default: false
+	},
+	guilty: {
+		type: Boolean,
+		default: false
+	}
 }).set("toJSON", {
 	transform: (doc, returnObject) => {
 		returnObject.id = returnObject._id.toString();
