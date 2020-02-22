@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Container, Button} from "semantic-ui-react";
+import {Form, Container, Button } from "semantic-ui-react";
 import { useState } from 'react';
 import axios from "axios";
 
@@ -33,7 +33,11 @@ function App() {
 					<Button type="submit">Submit</Button>
 				</Form>
 				:
-				JSON.stringify(gist)
+				Object.keys(gist).map(key => (
+					<Container>
+						<h1>{key}</h1> - <h5>{gist[key]}</h5>
+					</Container>
+				))
 			}
 			
 		</Container>
