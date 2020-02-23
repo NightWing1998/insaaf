@@ -66,7 +66,7 @@ class Neural_Network(object):
         np.savetxt("w1.txt", self.W1, fmt="%s")
         np.savetxt("w2.txt", self.W2, fmt="%s")
         np.savetxt("w3.txt", self.W3, fmt="%s")
-        np.savetxt("inputSize.txt", self.inputSize, fmt="%d")
+        np.savetxt("inputSize.txt", [self.inputSize], fmt="%d")
 
     def loadWeights(self):
         self.W1 = np.loadtxt("w1.txt", dtype=float)
@@ -85,7 +85,7 @@ class Neural_Network(object):
 def LoadNetwork():
     inputSize = None
     try:
-        inputSize = np.loadtxt("inputSize.txt", dtype=int)
+        inputSize = np.loadtxt("inputSize.txt", dtype=int)[0]
         return Neural_Network(inputSize).loadWeights()
     except:
         return None

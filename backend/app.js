@@ -141,7 +141,9 @@ app.get("/api/train", async (req, res, next) => {
 			inputData += c.oppurtunity ? "1," : "0,";
 			inputData += c.witness.for ? c.witness.for.toString() + "," : "0,";
 			inputData += c.witness.against ? c.witness.against.toString() + "," : "0,";
-			csvTypes.forEach(ct => {
+			let temp = [...csvTypes.values()];
+			for (let i = 0; i < temp.length - 1; i++) {
+				let ct = temp[i];
 				if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
 					inputData += "1,";
 				} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
@@ -149,16 +151,62 @@ app.get("/api/train", async (req, res, next) => {
 				} else {
 					inputData += "0,";
 				}
-			});
-			inputData += "\n";
-			outputData += `${c.guilty & !c.incomplete? 1:0},${c.incomplete?1:0},${c.guilty || c.incomplete?0:1}\n`;
+			}
+			if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === temp[temp.length - 1])) {
+				inputData += "1\n";
+			} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === temp[temp.length - 1])) {
+				inputData += "-1\n";
+			} else {
+				inputData += "0\n";
+			}
+			outputData += `${c.guilty? 1:0},${!c.incomplete?1:0},${c.guilty ?0:1}\n`;
 		});
 		const ML_URL = constants("ML_URL");
-		return (await axios.post(`${ML_URL}/train`, {
+		console.log(inputData, outputData);
+		const data = (await axios.post(`${ML_URL}/train`, {
 			inputData,
 			outputData
 		})).data;
+		res.json({
+			data
+		});
+	} catch (e) {
+		next(e);
+	}
+});
 
+app.post("/api/predict", async (req, res, next) => {
+	try {
+		const {
+			x
+		} = req.body;
+		const predicted = await axios.post(`${constants("ML_URL")}/predict`, {
+			x
+		});
+		// const predicted = [0, 0, 1];
+		const maxVal = Math.max(...predicted);
+		switch (predicted.find(v => maxVal === v)) {
+			case 0:
+				res.json({
+					predicted: "GUILTY",
+					confidence: maxVal * 100
+				});
+				break;
+			case 1:
+				res.json({
+					predicted: "NEED MORE EVIDENCE",
+					confidence: maxVal * 100
+				});
+				break;
+			case 2:
+				res.json({
+					predicted: "NOT GUILTY",
+					confidence: maxVal * 100
+				});
+				break;
+			default:
+				throw new Error("Some server error has occured")
+		}
 	} catch (e) {
 		next(e);
 	}
