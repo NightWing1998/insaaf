@@ -46,6 +46,10 @@ let caseSchema = new mongoose.Schema({
 	guilty: {
 		type: Boolean,
 		default: false
+	},
+	incomplete: {
+		type: Boolean,
+		default: true
 	}
 }).set("toJSON", {
 	transform: (doc, returnObject) => {

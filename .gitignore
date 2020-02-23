@@ -71,3 +71,9 @@ db/
 .DS_Store
 
 .vscode
+
+*.pub
+
+insaaf*
+
+__pycache__

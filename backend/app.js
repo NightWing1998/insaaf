@@ -5,7 +5,9 @@ const
 	multer = require("multer"),
 	gistExtractor = require("./extractor/index"),
 	middleware = require("./utils/middleware"),
-	fs = require("fs");
+	fs = require("fs"),
+	axios = require("axios"),
+	constants = require("./constants");
 
 const Case = require("./models/case");
 
@@ -58,6 +60,17 @@ app.post("/api/case", upload.single("case"), async (req, res, next) => {
 
 });
 
+// app.post("/api/case/force", async (req, res, next) => {
+// 	try {
+// 		let newCase = new Case(req.body);
+// 		let savedCase = await newCase.save();
+// 		res.status(201).json(savedCase.toJSON());
+// 	} catch (exception) {
+// 		next(exception);
+// 	}
+
+// });
+
 app.get("/api/case", async (req, res, next) => {
 	try {
 		const cases = await Case.find({});
@@ -104,6 +117,53 @@ app.delete("/api/case/:id", async (req, res, next) => {
 	}
 });
 
+app.get("/api/train", async (req, res, next) => {
+	try {
+		const cases = await Case.find({});
+		let csvTypes = new Set();
+		cases.forEach(c => {
+			c.evidence.for.forEach(ef => {
+				if (ef !== "") {
+					csvTypes.add(ef.toLowerCase().replace(".", "").replace(" ", "_"))
+				}
+			});
+			c.evidence.against.forEach(ea => {
+				if (ea !== "") {
+					csvTypes.add(ea.toLowerCase().replace(".", "").replace(" ", "_"))
+				}
+			});
+		});
+		let inputData = "",
+			outputData = "";
+		cases.forEach(c => {
+			inputData += c.means ? "1," : "0,";
+			inputData += c.motive ? "1," : "0,";
+			inputData += c.oppurtunity ? "1," : "0,";
+			inputData += c.witness.for ? c.witness.for.toString() + "," : "0,";
+			inputData += c.witness.against ? c.witness.against.toString() + "," : "0,";
+			csvTypes.forEach(ct => {
+				if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
+					inputData += "1,";
+				} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
+					inputData += "-1,";
+				} else {
+					inputData += "0,";
+				}
+			});
+			inputData += "\n";
+			outputData += `${c.guilty & !c.incomplete? 1:0},${c.incomplete?1:0},${c.guilty || c.incomplete?0:1}\n`;
+		});
+		const ML_URL = constants("ML_URL");
+		return (await axios.post(`${ML_URL}/train`, {
+			inputData,
+			outputData
+		})).data;
+
+	} catch (e) {
+		next(e);
+	}
+});
+
 app.get("/api/file", async (req, res, next) => {
 	try {
 		const cases = await Case.find({});
@@ -120,21 +180,21 @@ app.get("/api/file", async (req, res, next) => {
 				}
 			});
 		});
-		let csvFile = "number,means,motive,oppurtunity,witnessFor,witnessAgainst";
+		let csvFile = "";
+		csvFile += "means,motive,oppurtunity,witnessFor,witnessAgainst";
 		let temp = [...csvTypes.values()];
-		console.log(temp.join(","));
+		// console.log(temp.join(","));
 		if (temp.length !== 0) {
 			csvFile += "," + temp.join(",")
 		}
 		csvFile += ",guilty\n";
 		cases.forEach(c => {
-			csvFile += c.caseNumber + ",";
-			csvFile += c.means ? "yes," : "no,";
-			csvFile += c.motive ? "yes," : "no,";
-			csvFile += c.oppurtunity ? "yes," : "no,";
+			csvFile += c.means ? "1," : "0,";
+			csvFile += c.motive ? "1," : "0,";
+			csvFile += c.oppurtunity ? "1," : "0,";
 			csvFile += c.witness.for ? c.witness.for.toString() + "," : "0,";
 			csvFile += c.witness.against ? c.witness.against.toString() + "," : "0,";
-			console.log(c.evidence.for, c.evidence.against);
+			// console.log(c.evidence.for, c.evidence.against);
 			csvTypes.forEach(ct => {
 				if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
 					csvFile += "1,";
@@ -144,9 +204,8 @@ app.get("/api/file", async (req, res, next) => {
 					csvFile += "0,";
 				}
 			});
-			csvFile += c.guilty ? "yes\n" : "no\n";
+			csvFile += c.guilty ? "1\n" : "0\n";
 		});
-		console.log(csvFile);
 		fs.writeFileSync("./train.csv", csvFile);
 		res.download("./train.csv");
 		// res.send(csvFile);

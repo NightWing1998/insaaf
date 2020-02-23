@@ -1,2 +1,5 @@
-number,means,motive,oppurtunity,witnessFor,witnessAgainst,medical_certificate,forensic_report,murder_weapon,guilty
-137/2009,yes,yes,yes,0,3,-1,-1,-1,yes
+means,motive,oppurtunity,witnessFor,witnessAgainst,medical_certificate,forensic_report,murder_weapon,guilty
+1,1,1,0,3,-1,-1,-1,1
+1,1,1,2,0,0,-1,0,0
+1,1,1,0,5,-1,0,-1,0
+1,0,0,0,0,-1,0,-1,0

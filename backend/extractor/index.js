@@ -98,6 +98,7 @@ const extractAccused = (text) => {
 	const aRegEx = /(a|A)ccused/;
 	let i = text.search(vsRegEx);
 	let j = text.search(aRegEx);
+	// console.log(text);
 	let tokens = text.slice(i, j).replace(" ", "").split("\n").slice(1);
 	let aInt = 0;
 	if (tokens[0][0] == (aInt + 1)) {
