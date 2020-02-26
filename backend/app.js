@@ -32,6 +32,35 @@ const upload = multer({
 	storage: storage
 });
 
+let evidenceTypes;
+
+try {
+	const f = fs.readFileSync("evidence-types.json");
+	evidenceTypes = f["evidence-types"];
+	console.log(`evidnce types: ${evidenceTypes}`);
+} catch (e) {}
+
+const extractEvidenceTypes = async () => {
+	const cases = await Case.find({});
+	let evidenceTypes = new Set();
+	cases.forEach(c => {
+		c.evidence.for.forEach(ef => {
+			if (ef !== "") {
+				evidenceTypes.add(ef.toLowerCase().replace(".", "").replace(" ", "_"))
+			}
+		});
+		c.evidence.against.forEach(ea => {
+			if (ea !== "") {
+				evidenceTypes.add(ea.toLowerCase().replace(".", "").replace(" ", "_"))
+			}
+		});
+	});
+	fs.writeFileSync("evidence-types.json", {
+		"evidence-types": evidenceTypes
+	});
+	return evidenceTypes;
+};
+
 app.use(express.urlencoded({
 	extended: false
 }));
@@ -120,19 +149,13 @@ app.delete("/api/case/:id", async (req, res, next) => {
 app.get("/api/train", async (req, res, next) => {
 	try {
 		const cases = await Case.find({});
-		let csvTypes = new Set();
-		cases.forEach(c => {
-			c.evidence.for.forEach(ef => {
-				if (ef !== "") {
-					csvTypes.add(ef.toLowerCase().replace(".", "").replace(" ", "_"))
-				}
-			});
-			c.evidence.against.forEach(ea => {
-				if (ea !== "") {
-					csvTypes.add(ea.toLowerCase().replace(".", "").replace(" ", "_"))
-				}
-			});
-		});
+		let csvTypes;
+		if (evidenceTypes === undefined) {
+			csvTypes = await extractEvidenceTypes();
+		} else {
+			csvTypes = evidenceTypes;
+		}
+
 		let inputData = "",
 			outputData = "";
 		cases.forEach(c => {
@@ -159,10 +182,9 @@ app.get("/api/train", async (req, res, next) => {
 			} else {
 				inputData += "0\n";
 			}
-			outputData += `${c.guilty? 1:0},${!c.incomplete?1:0},${c.guilty ?0:1}\n`;
+			outputData += `${c.guilty&& !c.incomplete? 1:0},${c.incomplete?1:0},${c.guilty && !c.incomplete?0:1}\n`;
 		});
 		const ML_URL = constants("ML_URL");
-		console.log(inputData, outputData);
 		const data = (await axios.post(`${ML_URL}/train`, {
 			inputData,
 			outputData
@@ -180,12 +202,12 @@ app.post("/api/predict", async (req, res, next) => {
 		const {
 			x
 		} = req.body;
-		const predicted = await axios.post(`${constants("ML_URL")}/predict`, {
+		let predicted = (await axios.post(`${constants("ML_URL")}/predict`, {
 			x
-		});
+		})).data["prediction"];
 		// const predicted = [0, 0, 1];
 		const maxVal = Math.max(...predicted);
-		switch (predicted.find(v => maxVal === v)) {
+		switch (predicted.indexOf(maxVal)) {
 			case 0:
 				res.json({
 					predicted: "GUILTY",

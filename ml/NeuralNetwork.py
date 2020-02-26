@@ -78,14 +78,15 @@ class Neural_Network(object):
         print("Predicted data based on trained weights: ")
         print("Input (scaled): \n" + str(x))
         # print("Actual Output: \n" + str(y))
-        # print("Output: \n" + str(self.forward(x)))
+        print("Output: \n" + str(self.forward(x)))
         return self.forward(x)
 
 
 def LoadNetwork():
     inputSize = None
     try:
-        inputSize = np.loadtxt("inputSize.txt", dtype=int)[0]
+        inputSize = 8
+        print(inputSize)
         return Neural_Network(inputSize).loadWeights()
     except:
         return None

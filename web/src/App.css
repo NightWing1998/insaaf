@@ -32,7 +32,57 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.file-input {
+  font-size: 1.25rem;
+  background-color: #c8dadf;
+  position: relative;
+  padding: 3rem 0.5rem;
+  padding-top: 8rem;
+  outline: 2px dashed #92b0b3;
+  outline-offset: -10px;
+  -webkit-transition: outline-offset .15s ease-in-out,
+    background-color .15s linear;
+  transition: outline-offset .15s ease-in-out,
+    background-color .15s linear;
+  vertical-align: -webkit-baseline-middle;
+  /* vertical-align: middle; */
+  align-items: center;
+  text-align: center;
+  margin: 2rem;
+  height: 50vh;
+  max-width: 50vw;
+}
+
+.drag-over {
+  outline-offset: -20px;
+}
+
+svg {
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+.file-input__icon {
+  max-width: 100%;
+  height: 80px;
+  fill: #628386;
+  display: block;
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+
+.file-map {
+  display: none;
+  visibility: hidden;
+}
+
+.click-here:hover {
+  cursor: pointer;
 }

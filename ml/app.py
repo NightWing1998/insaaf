@@ -6,6 +6,7 @@ import traceback
 
 from NeuralNetwork import LoadNetwork, Neural_Network
 
+global NN
 app = Flask(__name__)
 
 NN = LoadNetwork()
@@ -48,18 +49,27 @@ def train():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    if NN == None:
-        return make_response(
-            jsonify(
-                {
-                    "error": "Neural network is not trained. Please train the network first"
-                }
-            ),
-            500,
-        )
-    data = request.get_json()
-    x = data["x"]
-    return NN.predict(x)
+    try:
+        NN = LoadNetwork()
+        if NN == None:
+            return make_response(
+                jsonify(
+                    {
+                        "error": "Neural network is not trained. Please train the network first"
+                    }
+                ),
+                500,
+            )
+        data = request.get_json()
+        x = np.array(tuple(map(int, data["x"])), dtype=float)
+        print(x)
+        pred = NN.predict(x)
+        return jsonify({"prediction": pred.tolist()})
+    except Exception as e:
+        traceback.print_exc()
+        # print(e)
+        data = {"message": str(e)}
+        return make_response(jsonify(data), 500)
 
 
 if __name__ == "__main__":

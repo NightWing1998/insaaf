@@ -61,13 +61,13 @@ const extractCaseNo = (tokens) => {
 
 
 const extractVictim = (tokens) => {
-	let victim = [];
-	let nouns = ['body', 'stone', 'head', 'son', 'daughter', 'husband', 'wife'];
+	let victim;
+	let nouns = ['father', 'mother', 'daughter', 'son', 'body', 'stone', 'head', 'blast', 'informant'];
 	tokens = sw.removeStopwords(tokens, nouns);
-	let searchParams = ['deceased', 'killed', 'murdered', 'death'];
+	let searchParams = ['deceased', 'killed', 'murdered', 'murder', 'death', 'died', 'victim'];
 	flag = true;
 	for (let i = 0; i < tokens.length && flag; i++) {
-		if (searchParams.includes(tokens[i].toLowerCase())) {
+		if (searchParams.includes(tokens[i].toLowerCase()) && flag) {
 			sentence = '';
 			for (let j = i - 1; j < i + 2 && flag; j++) {
 				sentence = sentence + ' ' + tokens[j];
@@ -80,10 +80,10 @@ const extractVictim = (tokens) => {
 					var taggedWord = taggedWords[k];
 					var word = taggedWord[0];
 					var tag = taggedWord[1];
-					// console.log(word + " /" + tag);
-					if (tag == 'NN' && flag && !searchParams.includes(word) && !nouns.includes(word)) {
+					console.log(word + " /" + tag);
+					if ((tag == 'NN' || tag == 'JJ' || tag == 'NNP') && flag && !searchParams.includes(word.toLowerCase()) && !nouns.includes(word.toLowerCase())) {
 						flag = !flag;
-						victim = [word];
+						victim = word;
 					}
 				}
 			}
