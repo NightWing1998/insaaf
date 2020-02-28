@@ -62,15 +62,17 @@ const extractCaseNo = (tokens) => {
 
 const extractVictim = (tokens) => {
 	let victim;
-	let nouns = ['father', 'mother', 'daughter', 'son', 'body', 'stone', 'head', 'blast', 'informant'];
-	tokens = sw.removeStopwords(tokens, nouns);
-	let searchParams = ['deceased', 'killed', 'murdered', 'murder', 'death', 'died', 'victim'];
+	let nouns = ['pw','dw','father','second','two','business','mother','daughter','husband','wife','son','body', 'stone','head','blast','informant','person','untraceable','face','food','citizen','muslim','hindu','christian'];
+  let rwords = ["smt", "SMT", "shri", "SHRI", "Shri","md", "Smt",",mohd"]
+	//tokens = sw.removeStopwords(sw.removeStopwords(tokens), rwords);
+	let searchParams = ['deceased', 'killed', 'murdered','murder', 'death','victim'];
 	flag = true;
 	for (let i = 0; i < tokens.length && flag; i++) {
 		if (searchParams.includes(tokens[i].toLowerCase()) && flag) {
 			sentence = '';
-			for (let j = i - 1; j < i + 2 && flag; j++) {
-				sentence = sentence + ' ' + tokens[j];
+			for (let j = i ; j < i + 3 && flag; j++) {
+        if(!rwords.includes(tokens[j].toLowerCase()) && !nouns.includes(tokens[j].toLowerCase()) )
+          sentence = sentence + ' ' + tokens[j];
 			}
 			const words = new pos.Lexer().lex(sentence);
 			const tagger = new pos.Tagger();
@@ -80,15 +82,15 @@ const extractVictim = (tokens) => {
 					var taggedWord = taggedWords[k];
 					var word = taggedWord[0];
 					var tag = taggedWord[1];
-					console.log(word + " /" + tag);
-					if ((tag == 'NN' || tag == 'JJ' || tag == 'NNP') && flag && !searchParams.includes(word.toLowerCase()) && !nouns.includes(word.toLowerCase())) {
-						flag = !flag;
+					if (!searchParams.includes(word.toLowerCase()) && flag && (tag=='NN' || tag=='NNP') && !nouns.includes(word.toLowerCase())) {
+            flag = !flag;
 						victim = word;
 					}
 				}
-			}
+      }
 		}
 	}
+  console.log(victim);
 	return victim;
 }
 
