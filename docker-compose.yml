@@ -44,7 +44,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./ml/:./
+      - ./ml/:/usr/src/app/
 
   mongo:
     container_name: mongo
