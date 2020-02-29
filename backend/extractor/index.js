@@ -9,7 +9,7 @@ const pdfParse = require("pdf-parse");
 const pos = require('pos');
 
 let commonStopwords = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri", "Smt");
+commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri","Md", "Smt","viz","Mohd");
 
 const extractIPCSections = (tokens) => {
 	let ipc = [];
