@@ -60,37 +60,34 @@ const extractCaseNo = (tokens) => {
 }
 
 
+
 const extractVictim = (tokens) => {
 	let victim;
-	let nouns = ['pw','dw','father','second','two','business','mother','daughter','husband','wife','son','body', 'stone','head','blast','informant','person','untraceable','face','food','citizen','muslim','hindu','christian'];
-        let rwords = ["smt", "SMT", "shri", "SHRI", "Shri","md", "Smt",",mohd"]
-	let searchParams = ['deceased', 'killed', 'murdered','murder', 'death','victim'];
-	flag = true;
-	for (let i = 0; i < tokens.length && flag; i++) {
-		if (searchParams.includes(tokens[i].toLowerCase()) && flag) {
-			sentence = '';
-			for (let j = i ; j < i + 3 && flag; j++) {
-        			if(!rwords.includes(tokens[j].toLowerCase()) && !nouns.includes(tokens[j].toLowerCase()) )
-          				sentence = sentence + ' ' + tokens[j];
-			}
-			const words = new pos.Lexer().lex(sentence);
-			const tagger = new pos.Tagger();
-			const taggedWords = tagger.tag(words);
-			if (flag) {
-				for (k in taggedWords) {
-					var taggedWord = taggedWords[k];
-					var word = taggedWord[0];
-					var tag = taggedWord[1];
-					if (!searchParams.includes(word.toLowerCase()) && flag && (tag=='NN' || tag=='NNP') && !nouns.includes(word.toLowerCase())) {
+	let searchParams = ['deceased','murdered','murder','assaulted','death','victim'];
+  	let search1Key = ['POINTS','POINT'];
+  	let search2Key = ['FINDINGS','REASONS','REASON','FINDING'];
+  	flag=true;
+  	for(let i=0; i<tokens.length && flag; i++){
+    		if(search1Key.includes(tokens[i].toUpperCase()) && search2Key.includes(tokens[i+1].toUpperCase())){
+      			while(tokens[i]!='REASONS' && flag){
+        			i++;
+        			if(searchParams.includes(tokens[i].toLowerCase())){
+          				const words = new pos.Lexer().lex(tokens[i+1]);
+			   	 	const tagger = new pos.Tagger();
+			    		const taggedWords = tagger.tag(words);
+					word=taggedWords[0][0];
+					tag=taggedWords[0][1];
+					if((tag=='NN' || tag=='NNP') && !searchParams.includes(word.toLowerCase())) {
             					flag = !flag;
 						victim = word;
 					}
 				}
       			}
-		}
-	}
-	return victim;
+    		}
+  	}
+  return victim;
 }
+
 
 const extractAccused = (text) => {
 	let accused = [];
