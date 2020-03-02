@@ -9,7 +9,7 @@ const pdfParse = require("pdf-parse");
 const pos = require('pos');
 
 let commonStopwords = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri", "Smt");
+commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri","Md", "Smt","viz","Mohd");
 
 const extractIPCSections = (tokens) => {
 	let ipc = [];
@@ -60,37 +60,34 @@ const extractCaseNo = (tokens) => {
 }
 
 
+
 const extractVictim = (tokens) => {
 	let victim;
-	let nouns = ['father', 'mother', 'daughter', 'son', 'body', 'stone', 'head', 'blast', 'informant'];
-	tokens = sw.removeStopwords(tokens, nouns);
-	let searchParams = ['deceased', 'killed', 'murdered', 'murder', 'death', 'died', 'victim'];
-	flag = true;
-	for (let i = 0; i < tokens.length && flag; i++) {
-		if (searchParams.includes(tokens[i].toLowerCase()) && flag) {
-			sentence = '';
-			for (let j = i - 1; j < i + 2 && flag; j++) {
-				sentence = sentence + ' ' + tokens[j];
-			}
-			const words = new pos.Lexer().lex(sentence);
-			const tagger = new pos.Tagger();
-			const taggedWords = tagger.tag(words);
-			if (flag) {
-				for (k in taggedWords) {
-					var taggedWord = taggedWords[k];
-					var word = taggedWord[0];
-					var tag = taggedWord[1];
-					console.log(word + " /" + tag);
-					if ((tag == 'NN' || tag == 'JJ' || tag == 'NNP') && flag && !searchParams.includes(word.toLowerCase()) && !nouns.includes(word.toLowerCase())) {
-						flag = !flag;
+	let searchParams = ['deceased','murdered','murder','assaulted','death','victim'];
+  	let search1Key = ['POINTS','POINT'];
+  	let search2Key = ['FINDINGS','REASONS','REASON','FINDING'];
+  	flag=true;
+  	for(let i=0; i<tokens.length && flag; i++){
+    		if(search1Key.includes(tokens[i].toUpperCase()) && search2Key.includes(tokens[i+1].toUpperCase())){
+      			while(tokens[i]!='REASONS' && flag){
+        			i++;
+        			if(searchParams.includes(tokens[i].toLowerCase())){
+          				const words = new pos.Lexer().lex(tokens[i+1]);
+			   	 	const tagger = new pos.Tagger();
+			    		const taggedWords = tagger.tag(words);
+					word=taggedWords[0][0];
+					tag=taggedWords[0][1];
+					if((tag=='NN' || tag=='NNP') && !searchParams.includes(word.toLowerCase())) {
+            					flag = !flag;
 						victim = word;
 					}
 				}
-			}
-		}
-	}
-	return victim;
+      			}
+    		}
+  	}
+  return victim;
 }
+
 
 const extractAccused = (text) => {
 	let accused = [];
