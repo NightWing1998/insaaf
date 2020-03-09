@@ -185,10 +185,11 @@ svg {
   transition: 0.25s linear;
   margin-top: 2rem;
   padding: 0.75rem;
-  height: 6vh;
-  width: 15vw;
+  min-height: 6vh;
+  min-width: 15vw;
   outline: none;
   font-size: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .btn:disabled {

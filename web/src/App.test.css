@@ -1,0 +1,199 @@
+.file-input {
+	font-size: 1.5rem;
+	background-color: rgb(5, 3, 3);
+	position: relative;
+	outline: 2px dashed #bbb;
+	outline-offset: -10px;
+	-webkit-transition: outline-offset .15s ease-in-out,
+		background-color .15s linear;
+	transition: outline-offset .15s ease-in-out,
+		background-color .15s linear;
+	vertical-align: -webkit-baseline-middle;
+	/* vertical-align: middle; */
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+	margin: 2rem 0;
+	height: 60vh;
+	max-width: 70vw;
+	color: #bbb;
+	text-shadow: -1px 1px 1px #888;
+	font-size: 2rem;
+	/* box-shadow: -10px 10px 1px rgb(75, 65, 65); */
+	transition: 0.25s linear;
+}
+
+/* .file-input:hover {
+  box-shadow: -13px 13px 2px rgb(87, 80, 80);
+} */
+
+.file-row {
+	line-height: 20vh !important;
+}
+
+.drag-over {
+	outline-offset: -20px;
+}
+
+svg {
+	vertical-align: middle;
+	pointer-events: none;
+}
+
+.file-input__icon {
+	max-width: 100%;
+	height: 15vh;
+	fill: #bbb;
+}
+
+.file-map {
+	display: none;
+	visibility: hidden;
+}
+
+.click-here:hover {
+	cursor: pointer;
+}
+
+.extra-large {
+	font-size: 5rem;
+	font-weight: bolder;
+	transition: 0.25s linear;
+}
+
+.landing {
+	margin-top: 8rem;
+	font-size: 3rem;
+	letter-spacing: 1px;
+	text-shadow: 1px 1px black;
+}
+
+.acro-text {
+	display: none;
+	font-size: 2rem;
+	text-shadow: none;
+	animation: fadeIn linear 0.5s;
+	-webkit-animation: fadeIn linear 0.5s;
+	-moz-animation: fadeIn linear 0.5s;
+	-o-animation: fadeIn linear 0.5s;
+	-ms-animation: fadeIn linear 0.5s;
+}
+
+.acro:hover .acro-text {
+	display: block;
+}
+
+.acro:hover .extra-large {
+	padding-right: 15px;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		display: contents;
+	}
+
+	25% {
+		opacity: 0.25;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	75% {
+		opacity: 0.75;
+		display: inline-block;
+	}
+
+	100% {
+		opacity: 1;
+		display: block;
+	}
+}
+
+@-moz-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@-o-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@-ms-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+/* https://medium.com/cloud-native-the-gathering/how-to-use-css-to-fade-in-and-fade-out-html-text-and-pictures-f45c11364f08 --credits for fade in */
+
+.btn {
+	background-color: rgb(5, 3, 3);
+	color: white;
+	box-shadow: -2.5px 2.5px 5px rgb(75, 65, 65);
+	transition: 0.2s linear;
+	margin-bottom: 1.5rem;
+	margin-top: 2rem;
+	padding: 0.75rem;
+	border-radius: 5px;
+}
+
+.btn:hover {
+	cursor: pointer;
+	box-shadow: -5px 5px 10px rgb(87, 80, 80);
+	transform: translateY(-2px);
+}
+
+.text {
+	font-size: 1.5rem;
+	text-shadow: none;
+	letter-spacing: normal;
+	padding: 1rem 0 3rem 1rem;
+	text-align: justify;
+}
+
+.btn>a {
+
+	text-decoration: none;
+	color: #fff;
+}
+
+.btn:disabled {
+	cursor: not-allowed;
+	background-color: #555;
+	box-shadow: -2.5px 2.5px 10px rgb(122, 111, 111);
+}
+
+.heading {
+	font-size: 2rem;
+	text-decoration: underline;
+	text-shadow: -2px 2px 4px rgb(87, 80, 80);
+	margin: 0;
+}
