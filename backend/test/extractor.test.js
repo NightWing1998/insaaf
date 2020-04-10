@@ -8,12 +8,18 @@ const api = supertest(app);
 
 const filenames = ["azad_ansare2012.pdf", "deepak_patil2015.pdf", "gannalal_gupta.pdf", "jitendrakumar_shahu2012.pdf", "nasimbano_sayyed2012.pdf"];
 
-beforeEach(async () => {
-	await Case.deleteMany({});
-});
+describe("testing case extraction", () => {
 
-test("posting each case /case", async () => {
-	await api.post("/case", filenames = {}, )
+	beforeEach(async () => {
+		await Case.deleteMany({});
+	});
+
+	test("posting each case /case", async () => {
+		await api.post("/case", {
+			filenames
+		});
+	});
+	
 });
 
 afterAll(() => {

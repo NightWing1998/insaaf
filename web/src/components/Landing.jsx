@@ -80,6 +80,7 @@ const Page = props => {
 					<button className="btn"><Link to="/predict">Suggest Notions</Link></button>
 				</div>
 			</div>
+
 		</Container>
 	)
 

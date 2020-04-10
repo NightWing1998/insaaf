@@ -2,7 +2,7 @@ import React from 'react';
 import Train from "./components/Train";
 import Predict from "./components/Predict";
 import LandingPage from "./components/Landing";
-import { Switch, Route } from "react-router-dom"
+import { Switch, Route } from "react-router-dom";
 
 function App() {
 
