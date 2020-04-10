@@ -3,7 +3,7 @@ version: "3"
 services:
   backend:
     container_name: backend
-    image: azureContainerService/backend:latest
+    build: "./backend"
     ports:
       - "8080:8080"
     links:
@@ -23,12 +23,16 @@ services:
 
   frontend:
     container_name: frontend
-    image: azureContainerService/frontend:latest
+    build:
+      context: ./web
+      dockerfile: prod.Dockerfile
     ports:
       - "8081:3000"
     links:
       - backend
       - ml
+    volumes:
+      - ./web/:/usr/src/app/
 
   nginx:
     container_name: proxy
@@ -42,7 +46,7 @@ services:
 
   ml:
     container_name: ml
-    image: azureContainerService/ml:latest
+    build: "./ml"
     ports:
       - "5000:5000"
     volumes:
