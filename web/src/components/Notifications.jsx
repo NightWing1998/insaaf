@@ -18,7 +18,7 @@ const Notification = props => {
 	} else if (category === "failure") {
 		return <Message negative>
 			{header ?
-				<Message.Header>{message}</Message.Header>
+				<Message.Header>{message.error}</Message.Header>
 				:
 				message
 			}

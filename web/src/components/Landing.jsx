@@ -77,7 +77,7 @@ const Page = props => {
 				<div className="text">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
 					<br />
-					<button className="btn"><Link to="/predict">Suggest Notions</Link></button>
+					<button className="btn"><Link to="/predict" style={{ color: "inherit" }}><span style={{ color: "inherit" }}>Suggest Notions</span></Link></button>
 				</div>
 			</div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Container, Button, Radio, Divider, Grid } from "semantic-ui-react"
+import { Form, Container, Radio, Divider, Grid } from "semantic-ui-react"
 import FileInput from "./FileInput";
 import Notification from "./Notifications";
 import useNotification from "../hooks/Notification";
@@ -83,18 +83,18 @@ const Predict = props => {
 
 	return (
 		<Container>
-			<Notification {...msg} />
+			{msg.message !== null ? <Notification {...msg} /> : <></>}
 			{gist === null ?
 				<FileInput handleFileChange={setFile} handleFileSubmit={handleFileSubmit} err={msg.category === "failure" ? true : false} />
 				:
-				<Form onSubmit={handleGistUpdate}>
+				<Form onSubmit={handleGistUpdate} style={{ margin: "5rem" }}>
 					<Grid columns="equal">
 						<Grid.Row>
 							<Grid.Column>
 								<label htmlFor="caseNumber">Case Number</label>
 							</Grid.Column>
 							<Grid.Column width={10} >
-								<input type="text" value={gist["caseNumber"]} name="caseNumber" onChange={({ target }) => updateGistPart(target.value, "caseNumber")} />
+								<input className="inp" type="text" value={gist["caseNumber"]} name="caseNumber" onChange={({ target }) => updateGistPart(target.value, "caseNumber")} />
 							</Grid.Column>
 						</Grid.Row>
 						<Divider />
@@ -103,7 +103,7 @@ const Predict = props => {
 								<label htmlFor="accused">Accused</label>
 							</Grid.Column>
 							<Grid.Column width={10} >
-								<input type="text" value={gist["accused"]} name="accused" onChange={({ target }) => updateGistPart(target.value, "accused")} />
+								<input className="inp" type="text" value={gist["accused"]} name="accused" onChange={({ target }) => updateGistPart(target.value, "accused")} />
 							</Grid.Column>
 						</Grid.Row>
 						<Divider />
@@ -112,7 +112,7 @@ const Predict = props => {
 								<label htmlFor="prosecution">Prosecution</label>
 							</Grid.Column>
 							<Grid.Column width={10} >
-								<input type="text" value={gist["prosecution"]} name="prosecution" onChange={({ target }) => updateGistPart(target.value, "prosecution")} />
+								<input className="inp" type="text" value={gist["prosecution"]} name="prosecution" onChange={({ target }) => updateGistPart(target.value, "prosecution")} />
 							</Grid.Column>
 						</Grid.Row>
 						<Divider />
@@ -121,7 +121,7 @@ const Predict = props => {
 								<label htmlFor="victim">Victim</label>
 							</Grid.Column>
 							<Grid.Column width={10} >
-								<input type="text" value={gist["victim"]} name="victim" onChange={({ target }) => updateGistPart(target.value, "victim")} />
+								<input className="inp" type="text" value={gist["victim"]} name="victim" onChange={({ target }) => updateGistPart(target.value, "victim")} />
 							</Grid.Column>
 						</Grid.Row>
 						<Divider />
@@ -139,19 +139,19 @@ const Predict = props => {
 								<label htmlFor="motive">Motive</label>
 							</Grid.Column>
 							<Grid.Column>
-								<Radio toggle checked={gist["motive"] | false} onChange={() => updateGistPart(!gist["motive"], "motive")} />
+								<Radio toggle checked={gist["motive"] || false} onChange={() => updateGistPart(!gist["motive"], "motive")} />
 							</Grid.Column>
 							<Grid.Column>
 								<label htmlFor="means">Means</label>
 							</Grid.Column>
 							<Grid.Column>
-								<Radio toggle checked={gist["means"] | false} onChange={() => updateGistPart(!gist["means"], "means")} />
+								<Radio toggle checked={gist["means"] || false} onChange={() => updateGistPart(!gist["means"], "means")} />
 							</Grid.Column>
 							<Grid.Column>
 								<label htmlFor="opp">Opportunity</label>
 							</Grid.Column>
 							<Grid.Column>
-								<Radio toggle checked={gist["oppurtunity"] | false} onChange={() => updateGistPart(!gist["oppurtnity"], "oppurtunity")} />
+								<Radio toggle checked={gist["oppurtunity"] || false} onChange={() => updateGistPart(!gist["oppurtnity"], "oppurtunity")} />
 							</Grid.Column>
 						</Grid.Row>
 						<Divider />
@@ -163,13 +163,13 @@ const Predict = props => {
 								<label htmlFor="evidenceFor">For(not guilty)</label>
 							</Grid.Column>
 							<Grid.Column>
-								<input type="text" value={gist["evidence"].for} onChange={({ target }) => updateGistPart(target.value, "evidence", "for")} />
+								<input className="inp" type="text" value={gist["evidence"].for} onChange={({ target }) => updateGistPart(target.value, "evidence", "for")} />
 							</Grid.Column>
 							<Grid.Column>
 								<label htmlFor="evidenceAgainst">Against(guilty)</label>
 							</Grid.Column>
 							<Grid.Column>
-								<input type="text" value={gist["evidence"].against} onChange={({ target }) => updateGistPart(target.value, "evidence", "against")} />
+								<input className="inp" type="text" value={gist["evidence"].against} onChange={({ target }) => updateGistPart(target.value, "evidence", "against")} />
 							</Grid.Column>
 						</Grid.Row>
 						<Divider />
@@ -181,7 +181,7 @@ const Predict = props => {
 								<label htmlFor="witnessFor">For(not guilty)</label>
 							</Grid.Column>
 							<Grid.Column>
-								<input type="number" value={gist["witness"] ? gist["witness"].for : 0} onChange={({ target }) => updateGistPart(target.value, "witness", "for")} />
+								<input className="inp" type="number" value={gist["witness"] ? gist["witness"].for : 0} onChange={({ target }) => updateGistPart(target.value, "witness", "for")} />
 							</Grid.Column>
 							<Grid.Column>
 								<label htmlFor="witnessAgainst">Against(guilty)</label>
@@ -192,16 +192,7 @@ const Predict = props => {
 						</Grid.Row>
 						<Divider />
 						<Grid.Row>
-							<Grid.Column>
-								<label htmlFor="guilty">Guilty</label>
-							</Grid.Column>
-							<Grid.Column>
-								<Radio toggle checked={gist["guilty"] | false} onChange={() => updateGistPart(!gist["guilty"], "guilty")} />
-							</Grid.Column>
-						</Grid.Row>
-						<Divider />
-						<Grid.Row>
-							<Button type="submit" style={{ backgroundColor: "green", color: "white" }}>Predict</Button>
+							<button className="btn" type="submit" >Predict</button>
 						</Grid.Row>
 					</Grid>
 				</Form>

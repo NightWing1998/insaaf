@@ -3,7 +3,8 @@ const
 	http = require("http"),
 	mongoose = require("mongoose"),
 	constant = require("./constants"),
-	Case = require("./models/case");
+	Case = require("./models/case"),
+	fs = require("fs");
 
 const mongoUri = constant("DATABASE");
 
@@ -19,6 +20,9 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 		useCreateIndex: true,
 		useFindAndModify: false,
 	};
+	if (!fs.existsSync("./case_files")) {
+		fs.mkdirSync("./case_files");
+	}
 	mongoose.connect(mongoUri, mongoConnectionOptions,
 		(dbErr) => {
 			if (dbErr) console.log(mongoUri, dbErr);

@@ -1,3 +1,6 @@
 node_modules/
-build/
-*lock*
+npm-debug*.log
+*.mongoshell
+.env
+db/
+*.test.js*

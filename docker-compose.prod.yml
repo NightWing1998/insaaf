@@ -3,59 +3,19 @@ version: "3"
 services:
   backend:
     container_name: backend
-    build: "./backend"
-    ports:
-      - "8080:8080"
-    links:
-      - mongo
-      - ml
-    environment:
-      - DATABASE=mongodb://mongo/insaaf
-      - DATABASE_TEST=mongodb://mongo/insaaf-test
-      - DATABASE_DEVELOPMENT=mongodb://mongo/insaaf-dev
-      - PORT=8080
-      - PORT_DEVELOPMENT=8080
-      - PORT_TEST=8080
-      - NODE_ENV=PRODUCTION
-      - ML_URL=http://ml:5000
-      - ML_URL_TEST=http://ml:5000
-      - ML_URL_DEVELOPMENT=http://ml:5000
+    build:
+      context: ./backend
+      dockerfile: prod.Dockerfile
+    image: containerService/backend:1.0
 
   frontend:
     container_name: frontend
+    image: containerService/frontend:1.0
     build:
       context: ./web
       dockerfile: prod.Dockerfile
-    ports:
-      - "8081:3000"
-    links:
-      - backend
-      - ml
-    volumes:
-      - ./web/:/usr/src/app/
-
-  nginx:
-    container_name: proxy
-    image: nginx:1.17.8-alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-    links:
-      - frontend
 
   ml:
     container_name: ml
+    image: containerService/ml:1.0
     build: "./ml"
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./ml/:/usr/src/app/
-
-  mongo:
-    container_name: mongo
-    image: mongo:4.2.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./db:/data/db

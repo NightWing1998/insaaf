@@ -3,4 +3,6 @@ npm-debug*.log
 *.mongoshell
 .env
 db/
-*lock*
+*.test.js*
+test/
+case_files/

@@ -209,3 +209,7 @@ svg {
 .btn:hover {
   box-shadow: -7px 7px 2px #999;
 }
+
+.inp {
+  box-shadow: 0 0 10px 5px rgba(0,5,0.3,0.1)!important;
+}

@@ -16,10 +16,12 @@ services:
       - PORT=8080
       - PORT_DEVELOPMENT=8080
       - PORT_TEST=8080
-      - NODE_ENV=PRODUCTION
+      - NODE_ENV=DEVELOPMENT
       - ML_URL=http://ml:5000
       - ML_URL_TEST=http://ml:5000
       - ML_URL_DEVELOPMENT=http://ml:5000
+    volumes:
+      - ./backend/:/usr/src/app/
 
   frontend:
     container_name: frontend
