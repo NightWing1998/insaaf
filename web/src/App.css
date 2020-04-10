@@ -213,3 +213,11 @@ svg {
 .inp {
   box-shadow: 0 0 10px 5px rgba(0,5,0.3,0.1)!important;
 }
+
+.training {
+  margin: 5rem;
+}
+.training label {
+  font-size: 1.5rem;
+  text-shadow: 1px 1px black;
+}

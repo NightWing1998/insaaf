@@ -75,6 +75,7 @@ const Predict = props => {
 				res.data.witness = res.data.witness || {}
 				console.log(res.data);
 				setGist(res.data);
+				axios.post(`/api/intelligence/train`).catch(() => { });
 			})
 			.catch(err => console.error(err.response.data));
 	}
@@ -87,7 +88,7 @@ const Predict = props => {
 			{gist === null ?
 				<FileInput handleFileChange={setFile} handleFileSubmit={handleFileSubmit} err={msg.category === "failure" ? true : false} />
 				:
-				<Form onSubmit={handleGistUpdate} style={{ margin: "5rem" }}>
+				<Form onSubmit={handleGistUpdate} className="training" style={{ margin: "5rem" }}>
 					<Grid columns="equal">
 						<Grid.Row>
 							<Grid.Column>
@@ -201,7 +202,7 @@ const Predict = props => {
 						</Grid.Row>
 						<Divider />
 						<Grid.Row>
-							<button className="btn" type="submit" >Predict</button>
+							<button className="btn" type="submit" >Train</button>
 						</Grid.Row>
 					</Grid>
 				</Form>

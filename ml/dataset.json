@@ -1,0 +1,172 @@
+{
+	"data": [
+		{
+			"victim": "Vinay",
+			"accused": "Sachin Khanna",
+			"penalCodes": [
+				302
+			],
+			"means": 1,
+			"motive": 0,
+			"opportunity": 1,
+			"evidence": {
+				"for": {},
+				"against": {
+					"murder_weapon": "bat",
+					"forensic_reports": [
+						"ct scan",
+						"post mortem",
+						"blood stained clothes"
+					],
+					"dying_declaration": true
+				}
+			},
+			"witness": {
+				"for": 0,
+				"against": 10
+			},
+			"time_since_petition_filed": 0,
+			"conclusion": "need more evidence"
+		},
+		{
+			"victim": "Vinay",
+			"accused": "Sachin Khanna",
+			"penalCodes": [
+				302
+			],
+			"means": 1,
+			"motive": 0,
+			"opportunity": 1,
+			"evidence": {
+				"for": {
+					"medical_certificates": [
+						"mental illness"
+					]
+				},
+				"against": {
+					"murder_weapon": "bat",
+					"medical_certificates": [
+						"injury"
+					],
+					"forensic_reports": [
+						"ct scan",
+						"post mortem",
+						"blood stained clothes"
+					],
+					"dying_declaration": true
+				}
+			},
+			"witness": {
+				"for": 0,
+				"against": 10
+			},
+			"time_since_petition_filed": 2,
+			"conclusion": "need more evidence"
+		},
+		{
+			"victim": "Vinay",
+			"accused": "Sachin Khanna",
+			"penalCodes": [
+				302
+			],
+			"means": 1,
+			"motive": 1,
+			"opportunity": 1,
+			"evidence": {
+				"for": {},
+				"against": {
+					"murder_weapon": "bat",
+					"medical_certificates": [
+						"injury"
+					],
+					"forensic_reports": [
+						"ct scan",
+						"post mortem",
+						"blood stained clothes"
+					],
+					"dying_declaration": true
+				}
+			},
+			"witness": {
+				"for": 0,
+				"against": 9
+			},
+			"time_since_petition_filed": 64,
+			"conclusion": "need more evidence"
+		},
+		{
+			"victim": "Vinay",
+			"accused": "Sachin Khanna",
+			"penalCodes": [
+				302
+			],
+			"means": 1,
+			"motive": 1,
+			"opportunity": 1,
+			"evidence": {
+				"for": {
+					"medical_certificates": [
+						"discharge papers of victim"
+					]
+				},
+				"against": {
+					"murder_weapon": "bat",
+					"medical_certificates": [
+						"injury"
+					],
+					"forensic_reports": [
+						"ct scan",
+						"post mortem",
+						"blood stained clothes"
+					],
+					"dying_declaration": true
+				}
+			},
+			"witness": {
+				"for": 0,
+				"against": 7
+			},
+			"time_since_petition_filed": 82,
+			"conclusion": "need more evidence"
+		},
+		{
+			"victim": "Vinay",
+			"accused": "Sachin Khanna",
+			"penalCodes": [
+				302
+			],
+			"means": 1,
+			"motive": 1,
+			"opportunity": 1,
+			"evidence": {
+				"for": {
+					"medical_certificates": [
+						"discharge papers of victim"
+					]
+				},
+				"against": {
+					"murder_weapon": "bat",
+					"medical_certificates": [
+						"injury"
+					],
+					"forensic_reports": [
+						"ct scan",
+						"post mortem",
+						"blood stained clothes"
+					],
+					"dying_declaration": true
+				}
+			},
+			"witness": {
+				"for": 0,
+				"against": 7
+			},
+			"time_since_petition_filed": 101,
+			"conclusion": "guilty",
+			"punishment": [
+				"imprisonment for life",
+				"50,000 fine"
+			]
+		}
+	]
+}

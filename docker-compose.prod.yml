@@ -19,3 +19,8 @@ services:
     container_name: ml
     image: containerService/ml:1.0
     build: "./ml"
+
+  proxy:
+    container_name: proxy
+    build: ./proxy
+    image: containerService/proxy:1.0

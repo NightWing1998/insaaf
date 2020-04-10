@@ -5,9 +5,7 @@ const
 	multer = require("multer"),
 	gistExtractor = require("./extractor/index"),
 	middleware = require("./utils/middleware"),
-	fs = require("fs"),
-	axios = require("axios"),
-	constants = require("./constants");
+	intelligenceController = require("./api");
 
 const Case = require("./models/case");
 
@@ -32,40 +30,10 @@ const upload = multer({
 	storage: storage
 });
 
-let evidenceTypes;
-
-try {
-	const f = fs.readFileSync("evidence-types.json");
-	evidenceTypes = f["evidence-types"];
-	console.log(`evidnce types: ${evidenceTypes}`);
-} catch (e) {}
-
-const extractEvidenceTypes = async () => {
-	const cases = await Case.find({});
-	let evidenceTypes = new Set();
-	cases.forEach(c => {
-		c.evidence.for.forEach(ef => {
-			if (ef !== "") {
-				evidenceTypes.add(ef.toLowerCase().replace(".", "").replace(" ", "_"))
-			}
-		});
-		c.evidence.against.forEach(ea => {
-			if (ea !== "") {
-				evidenceTypes.add(ea.toLowerCase().replace(".", "").replace(" ", "_"))
-			}
-		});
-	});
-	fs.writeFileSync("evidence-types.json", {
-		"evidence-types": evidenceTypes
-	});
-	return evidenceTypes;
-};
-
 app.use(express.urlencoded({
 	extended: false
 }));
 app.use(express.json({}));
-// app.use(upload.array());
 
 app.use(middleware.requestLogger);
 
@@ -146,143 +114,7 @@ app.delete("/api/case/:id", async (req, res, next) => {
 	}
 });
 
-app.get("/api/train", async (req, res, next) => {
-	try {
-		const cases = await Case.find({});
-		let csvTypes;
-		if (evidenceTypes === undefined) {
-			csvTypes = await extractEvidenceTypes();
-		} else {
-			csvTypes = evidenceTypes;
-		}
-
-		let inputData = "",
-			outputData = "";
-		cases.forEach(c => {
-			inputData += c.means ? "1," : "0,";
-			inputData += c.motive ? "1," : "0,";
-			inputData += c.oppurtunity ? "1," : "0,";
-			inputData += c.witness.for ? c.witness.for.toString() + "," : "0,";
-			inputData += c.witness.against ? c.witness.against.toString() + "," : "0,";
-			let temp = [...csvTypes.values()];
-			for (let i = 0; i < temp.length - 1; i++) {
-				let ct = temp[i];
-				if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
-					inputData += "1,";
-				} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
-					inputData += "-1,";
-				} else {
-					inputData += "0,";
-				}
-			}
-			if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === temp[temp.length - 1])) {
-				inputData += "1\n";
-			} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === temp[temp.length - 1])) {
-				inputData += "-1\n";
-			} else {
-				inputData += "0\n";
-			}
-			outputData += `${c.guilty&& !c.incomplete? 1:0},${c.incomplete?1:0},${c.guilty && !c.incomplete?0:1}\n`;
-		});
-		const ML_URL = constants("ML_URL");
-		const data = (await axios.post(`${ML_URL}/train`, {
-			inputData,
-			outputData
-		})).data;
-		res.json({
-			data
-		});
-	} catch (e) {
-		next(e);
-	}
-});
-
-app.post("/api/predict", async (req, res, next) => {
-	try {
-		const {
-			x
-		} = req.body;
-		let predicted = (await axios.post(`${constants("ML_URL")}/predict`, {
-			x
-		})).data["prediction"];
-		// const predicted = [0, 0, 1];
-		const maxVal = Math.max(...predicted);
-		switch (predicted.indexOf(maxVal)) {
-			case 0:
-				res.json({
-					predicted: "GUILTY",
-					confidence: maxVal * 100
-				});
-				break;
-			case 1:
-				res.json({
-					predicted: "NEED MORE EVIDENCE",
-					confidence: maxVal * 100
-				});
-				break;
-			case 2:
-				res.json({
-					predicted: "NOT GUILTY",
-					confidence: maxVal * 100
-				});
-				break;
-			default:
-				throw new Error("Some server error has occured")
-		}
-	} catch (e) {
-		next(e);
-	}
-});
-
-app.get("/api/file", async (req, res, next) => {
-	try {
-		const cases = await Case.find({});
-		let csvTypes = new Set();
-		cases.forEach(c => {
-			c.evidence.for.forEach(ef => {
-				if (ef !== "") {
-					csvTypes.add(ef.toLowerCase().replace(".", "").replace(" ", "_"))
-				}
-			});
-			c.evidence.against.forEach(ea => {
-				if (ea !== "") {
-					csvTypes.add(ea.toLowerCase().replace(".", "").replace(" ", "_"))
-				}
-			});
-		});
-		let csvFile = "";
-		csvFile += "means,motive,oppurtunity,witnessFor,witnessAgainst";
-		let temp = [...csvTypes.values()];
-		// console.log(temp.join(","));
-		if (temp.length !== 0) {
-			csvFile += "," + temp.join(",")
-		}
-		csvFile += ",guilty\n";
-		cases.forEach(c => {
-			csvFile += c.means ? "1," : "0,";
-			csvFile += c.motive ? "1," : "0,";
-			csvFile += c.oppurtunity ? "1," : "0,";
-			csvFile += c.witness.for ? c.witness.for.toString() + "," : "0,";
-			csvFile += c.witness.against ? c.witness.against.toString() + "," : "0,";
-			// console.log(c.evidence.for, c.evidence.against);
-			csvTypes.forEach(ct => {
-				if (c.evidence.for.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
-					csvFile += "1,";
-				} else if (c.evidence.against.find(e => e.toLowerCase().replace(".", "").replace(" ", "_") === ct)) {
-					csvFile += "-1,";
-				} else {
-					csvFile += "0,";
-				}
-			});
-			csvFile += c.guilty ? "1\n" : "0\n";
-		});
-		fs.writeFileSync("./train.csv", csvFile);
-		res.download("./train.csv");
-		// res.send(csvFile);
-	} catch (e) {
-		next(e);
-	}
-});
+app.use("/api/intelligence", intelligenceController);
 
 app.use(middleware.MongooseErrorHandler);
 app.use(middleware.unknownEndpoint);
