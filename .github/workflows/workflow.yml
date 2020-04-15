@@ -1,5 +1,5 @@
 on: [push]
-name: Linux_Container_Workflow
+name: BuildImages
 
 jobs:
     build-and-deploy:
@@ -20,10 +20,10 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build ../../backend -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
-            docker build ../../web -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
-            docker build ../../proxy -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
-            docker build ../../ml -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
+            docker build ${{github.repository}}/backend -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+            docker build ${{github.repository}}/web -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
+            docker build ${{github.repository}}/proxy -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
+            docker build ${{github.repository}}/ml -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
             docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }} insaaf.azurecr.io/insaaf_frontend:${{ github.sha }} insaaf.azurecr.io/insaaf_proxy:${{ github.sha }} insaaf.azurecr.io/insaaf_ml:${{ github.sha }} 
 
         # - name: 'Deploy backend to Azure Container Instances'
