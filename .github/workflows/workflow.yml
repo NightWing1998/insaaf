@@ -1,0 +1,68 @@
+on: [push]
+name: Linux_Container_Workflow
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+        # checkout the repo
+        - name: 'Checkout GitHub Action'
+          uses: actions/checkout@master
+          
+        # - name: 'Login via Azure CLI'
+        #   uses: azure/login@v1
+        #   with:
+        #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+        - uses: azure/docker-login@v1
+          with:
+            login-server: insaaf.azurecr.io
+            username: ${{ secrets.REGISTRY_USERNAME }}
+            password: ${{ secrets.REGISTRY_PASSWORD }}
+        - run: |
+            docker build ./backend -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+            docker build ./web -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
+            docker build ./proxy -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
+            docker build ./ml -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
+            docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }} insaaf.azurecr.io/insaaf_frontend:${{ github.sha }} insaaf.azurecr.io/insaaf_proxy:${{ github.sha }} insaaf.azurecr.io/insaaf_ml:${{ github.sha }} 
+
+        # - name: 'Deploy backend to Azure Container Instances'
+        #   uses: 'azure/aci-deploy@v1'
+        #   with:
+        #     resource-group: insaaf
+        #     dns-name-label: url-for-container
+        #     image: insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+        #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        #     environment-variables: NODE_ENV="PRODUCTION" PORT=8080 ML_URL="http://contianer-url:5000/"
+        #     secure-environment-variables: DATABASE=${{ secrets.DATABASE }}
+        #     name: insaaf_backend
+        #     location: 'west india'
+        
+        # - name: 'Deploy frontend to Azure Container Instances'
+        #   uses: 'azure/aci-deploy@v1'
+        #   with:
+        #     resource-group: insaaf
+        #     dns-name-label: url-for-container
+        #     image: insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
+        #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        #     name: insaaf_frontend
+        #     location: 'west india'
+
+        # - name: 'Deploy ml to Azure Container Instances'
+        #   uses: 'azure/aci-deploy@v1'
+        #   with:
+        #     resource-group: insaaf
+        #     dns-name-label: url-for-container
+        #     image: insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
+        #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        #     name: insaaf_frontend
+        #     location: 'west india'
+
+        # - uses: Azure/pipelines@v1
+        #   with:
+        #     azure-devops-project-url: 'https://dev.azure.com/organization/project-name'
+        #     azure-pipeline-name: 'pipeline-name' # name of the Azure pipeline to be triggered
+        #     azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
