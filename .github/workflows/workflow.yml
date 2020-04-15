@@ -20,7 +20,7 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build ${{github.workspace}}/backend/ --file prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+            docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
             docker build ${{github.workspace}}/web -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
             docker build ${{github.workspace}}/proxy -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
             docker build ${{github.workspace}}/ml -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
