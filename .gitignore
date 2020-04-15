@@ -64,8 +64,6 @@ case_files/
 
 *.pdf
 
-*.txt
-
 db/
 
 .DS_Store
