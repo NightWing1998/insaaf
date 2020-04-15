@@ -20,10 +20,10 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build ${{github.repository}}/backend -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
-            docker build ${{github.repository}}/web -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
-            docker build ${{github.repository}}/proxy -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
-            docker build ${{github.repository}}/ml -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
+            docker build ${{github.workspace}}/backend -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+            docker build ${{github.workspace}}/web -f prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
+            docker build ${{github.workspace}}/proxy -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
+            docker build ${{github.workspace}}/ml -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
             docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }} insaaf.azurecr.io/insaaf_frontend:${{ github.sha }} insaaf.azurecr.io/insaaf_proxy:${{ github.sha }} insaaf.azurecr.io/insaaf_ml:${{ github.sha }} 
 
         # - name: 'Deploy backend to Azure Container Instances'
