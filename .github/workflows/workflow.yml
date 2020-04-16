@@ -21,10 +21,13 @@ jobs:
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
             docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+            docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
             docker build ${{github.workspace}}/web/ -f web/prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
+            docker push insaaf.azurecr.io/insaaf_frontend:${{ github.sha }}
             docker build ${{github.workspace}}/proxy/ --file proxy/Dockerfile -t insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
+            docker push insaaf.azurecr.io/insaaf_proxy:${{ github.sha }}
             docker build ${{github.workspace}}/ml/ --file ml/Dockerfile -t insaaf.azurecr.io/insaaf_ml:${{ github.sha }}
-            docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }} insaaf.azurecr.io/insaaf_frontend:${{ github.sha }} insaaf.azurecr.io/insaaf_proxy:${{ github.sha }} insaaf.azurecr.io/insaaf_ml:${{ github.sha }} 
+            docker push insaaf.azurecr.io/insaaf_ml:${{ github.sha }} 
 
         # - name: 'Deploy backend to Azure Container Instances'
         #   uses: 'azure/aci-deploy@v1'
