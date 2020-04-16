@@ -1,0 +1,28 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:    
+      - master         # Push events on master branch
+    
+    paths:
+      - ${{github.workspace}}/backend
+
+name: BuildBackend
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout the repo
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: insaaf.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - run: |
+        docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+        docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
