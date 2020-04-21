@@ -5,7 +5,7 @@ on:
       - master         # Push events on master branch
     
     paths:
-      - ${{github.workspace}}/backend
+      - ./backend/
 
 name: BuildBackend
 
@@ -24,5 +24,5 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
-        docker push insaaf.azurecr.io/insaaf_backend:${{ github.sha }}
+        docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend::$(date +%s)
+        docker push insaaf.azurecr.io/insaaf_backend:$(date +%s)
