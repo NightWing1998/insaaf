@@ -1,0 +1,42 @@
+# exposes port 80 of the application to localhost:80 inside app services
+version: "3"
+services:
+  backend:
+    container_name: backend
+    image: insaaf.azurecr.io/insaaf_backend:1cc5638598ee279e1dd50a8e053b2a0c3b0a4715
+    ports:
+      - "8080:8080"
+    links:
+      - mongo
+      - ml
+    environment:
+      - DATABASE=${MONGODB_URI}
+      - PORT=8080
+      - NODE_ENV=PRODUCTION
+      - ML_URL=http://ml:5000
+
+  frontend:
+    container_name: frontend
+    image: insaaf.azurecr.io/insaaf_frontend:1cc5638598ee279e1dd50a8e053b2a0c3b0a4715
+    ports:
+      - "8081:3000"
+    links:
+      - backend
+      - ml
+
+  proxy:
+    container_name: proxy
+    image: insaaf.azurecr.io/insaaf_proxy:1cc5638598ee279e1dd50a8e053b2a0c3b0a4715
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - frontend
+
+  ml:
+    container_name: ml
+    image: insaaf.azurecr.io/insaaf_ml:1cc5638598ee279e1dd50a8e053b2a0c3b0a4715
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./ml/:/usr/src/app/

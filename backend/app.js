@@ -18,10 +18,10 @@ const caseFilterer = (req, file, callback) => {
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, 'case_files/')
+		cb(null, "case_files/");
 	},
 	filename: function (req, file, cb) {
-		cb(null, file.originalname)
+		cb(null, file.originalname);
 	}
 });
 
@@ -95,7 +95,7 @@ app.put("/api/case/:id", async (req, res, next) => {
 		let updatedCaseFile = await Case.findByIdAndUpdate(caseId, req.body, {
 			new: true
 		});
-		let temp = updatedCaseFile.toJSON()
+		let temp = updatedCaseFile.toJSON();
 		console.log(temp);
 		res.status(201).json(temp);
 	} catch (exception) {

@@ -27,7 +27,7 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 		(dbErr) => {
 			if (dbErr) console.log(mongoUri, dbErr);
 			else console.log("Connected to database ", mongoUri);
-			// Case.deleteMany({}).then(res => console.log("Cleared Cases", res));
+			Case.deleteMany({}).then(res => console.log("Cleared Cases", res));
 		}
 	);
 });
