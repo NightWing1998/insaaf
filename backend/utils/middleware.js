@@ -17,7 +17,7 @@ module.exports = {
 		} else if (error.name === "MongoError") {
 			return response.status(500).json({
 				error: error._message || error.message
-			})
+			});
 		} else if (error.name === "UnknownError") {
 			return response.status(error.statusCode).json({
 				error: error._message || error.message
@@ -31,4 +31,4 @@ module.exports = {
 			error: `unknown endpoint ${request.path}`
 		});
 	}
-}
+};

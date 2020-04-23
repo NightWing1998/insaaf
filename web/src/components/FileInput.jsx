@@ -1,12 +1,11 @@
 import React from "react";
-import { Container, Grid, Loader } from "semantic-ui-react";
+import { Container, Grid } from "semantic-ui-react";
 import "../App.css";
 import { useState } from "react";
 
 const FileInput = props => {
 
 	const [file, setFile] = useState(null);
-	const [submited, setSubmit] = useState(false)
 
 	const fileClick = () => {
 		document.getElementById("pdfLoader").click();
@@ -41,7 +40,6 @@ const FileInput = props => {
 	}
 
 	const formSubmit = (event) => {
-		setSubmit(true);
 		props.handleFileSubmit(event);
 	}
 
@@ -95,10 +93,10 @@ const FileInput = props => {
 					<Grid columns={2}>
 						<Grid.Row>
 							<Grid.Column>
-								<button className="btn" type="submit" disabled={file ? false : true}>{submited ? <Loader active inline indeterminate /> : "Submit"}</button>
+								<button className="btn" type="submit" disabled={file ? false : true}>Submit</button>
 							</Grid.Column>
 							<Grid.Column>
-								<button className="btn" type="reset" onClick={() => { setFile(null); props.handleFileChange(null); setSubmit(false) }} disabled={file ? false : true} >Clear</button>
+								<button className="btn" type="reset" onClick={() => { setFile(null); props.handleFileChange(null) }} disabled={file ? false : true} >Clear</button>
 							</Grid.Column>
 						</Grid.Row>
 					</Grid>

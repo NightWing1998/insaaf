@@ -23,5 +23,5 @@ describe("testing case extraction", () => {
 });
 
 afterAll(() => {
-	mongoose.connection.close()
+	mongoose.connection.close();
 });

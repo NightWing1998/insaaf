@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require("mongoose-unique-validator");
 
 let caseSchema = new mongoose.Schema({
 	prosecution: {
@@ -50,6 +50,9 @@ let caseSchema = new mongoose.Schema({
 	incomplete: {
 		type: Boolean,
 		default: true
+	},
+	caseStart: {
+		type: String
 	}
 }).set("toJSON", {
 	transform: (doc, returnObject) => {
