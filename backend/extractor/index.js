@@ -9,12 +9,12 @@ const pdfParse = require("pdf-parse");
 const pos = require("pos");
 
 let commonStopwords = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri","Md", "Smt","viz","Mohd");
+commonStopwords.push("smt", "SMT", "shri", "SHRI", "Shri","Md", "Smt","viz","Mohd","Yr","Ms");
 
 const extractIPCSections = (tokens) => {
 	let ipc = [];
 	const searchParams = ["section", [
-		["indian", "penal", "code"], "ipc"
+		["indian", "penal", "code"], "ipc","I.P.C.","IPC","I.P.C"
 	]];
 	let flag = false;
 	let iterator = 0,
@@ -146,7 +146,7 @@ const gistInJSON = async (casePathAndName) => {
 	// console.log(tokens.slice(0, 200));
 
 	tokens = sw.removeStopwords(sw.removeStopwords(tokens), commonStopwords);
-	// console.log(tokens);
+	console.log(tokens);
 	return {
 		penalCodes: extractIPCSections(tokens.slice(0, 500)),
 		caseNumber: extractCaseNo(tokens.slice(0, 200)),

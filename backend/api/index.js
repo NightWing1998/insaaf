@@ -60,7 +60,7 @@ router.put("/predict/:id", async (req, res, next) => {
 		// Predict here
 		const caseResult = await predict(updatedCaseFile.toJSON());
 
-		res.status(200).json(caseResult);
+		res.status(201).json(caseResult);
 
 		// res.status(201).json(temp);
 	} catch (exception) {
@@ -120,7 +120,7 @@ router.post("/train", async (req, res, next) => {
 
 		console.log(trained);
 
-		res.status(200).json(trained);
+		res.status(201).json(trained);
 	} catch (error) {
 		next(error);
 	}
