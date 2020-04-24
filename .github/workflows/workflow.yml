@@ -20,11 +20,11 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend:$(date +%s)
+        docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend
         docker push insaaf.azurecr.io/insaaf_backend
-        docker build ${{github.workspace}}/web/ -f web/prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend:$(date +%s)
+        docker build ${{github.workspace}}/web/ -f web/prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend
         docker push insaaf.azurecr.io/insaaf_frontend
-        docker build ${{github.workspace}}/ml/ --file ml/Dockerfile -t insaaf.azurecr.io/insaaf_ml:$(date +%s)
+        docker build ${{github.workspace}}/ml/ --file ml/Dockerfile -t insaaf.azurecr.io/insaaf_ml
         docker push insaaf.azurecr.io/insaaf_ml
-        docker build ${{github.workspace}}/proxy/ --file proxy/Dockerfile -t insaaf.azurecr.io/insaaf_proxy:$(date +%s)
+        docker build ${{github.workspace}}/proxy/ --file proxy/Dockerfile -t insaaf.azurecr.io/insaaf_proxy
         docker push insaaf.azurecr.io/insaaf_proxy

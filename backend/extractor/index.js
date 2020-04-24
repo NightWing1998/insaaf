@@ -146,11 +146,11 @@ const gistInJSON = async (casePathAndName) => {
 	// console.log(tokens.slice(0, 200));
 
 	tokens = sw.removeStopwords(sw.removeStopwords(tokens), commonStopwords);
-	console.log(tokens);
+	// console.log(tokens);
 	return {
 		penalCodes: extractIPCSections(tokens.slice(0, 500)),
 		caseNumber: extractCaseNo(tokens.slice(0, 200)),
-		prosecution: "the state",
+		prosecution: ["The State"],
 		victim: extractVictim(tokens),
 		accused: extractAccused(textResponse),
 		caseStart: ""

@@ -36,7 +36,10 @@ const dateDiff = (date1, date2) => {
 const predict = async (caseData) => {
 	const {means, motive, opportunity, caseStart, witness, evidence} = caseData;
 	if(!caseStart || caseStart.length !== 7){
-		throw new Error(`case start year(${caseStart}) is invalid`);
+		const err = new Error();
+		err.message = `Case start (${caseStart}) is invalid`;
+		err.name = "MongooseValidationError";
+		throw err;
 	}
 	const time_since_petition_filed = dateDiff(new Date(),new Date(caseStart.split("/")[0],caseStart.split("/")[1]));
 	console.log(time_since_petition_filed);
@@ -54,6 +57,12 @@ router.put("/predict/:id", async (req, res, next) => {
 		let updatedCaseFile = await Case.findByIdAndUpdate(caseId, req.body, {
 			new: true
 		});
+		if(updatedCaseFile === null){
+			return res.status(404).json({
+				message: "Case file not found",
+				error: true
+			});
+		}
 		let temp = updatedCaseFile.toJSON();
 		console.log(temp);
 

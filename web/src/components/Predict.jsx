@@ -20,6 +20,10 @@ const Predict = props => {
 
 	const [result,setResult] = useState(null);
 
+	if(props.medium !== "predict" && props.medium !== "train"){
+		return <></>;
+	}
+
 	const handleFileSubmit = e => {
 		e.preventDefault();
 		if (file === null) return;
@@ -37,10 +41,9 @@ const Predict = props => {
 				res.data.accused = res.data.accused.join(",");
 				res.data.penalCode = res.data.penalCode.join(",");
 				res.data.victim = res.data.victim.join(",");
-				res.data.evidence.for = res.data.evidence.for.join(",");
-				res.data.evidence.against = res.data.evidence.against.join(",");
-				res.data.witness = res.data.witness || {}
+				res.data.prosecution = res.data.prosecution.join(",");
 				console.log(res.data);
+				// console.log(Object.keys(res.data["evidence"]["for"]).map(evidence => [evidence,res.data["evidence"]["for"][evidence]]))
 				setTimeout(() => {
 					setLoading(false);
 					setGist(res.data);
@@ -49,15 +52,15 @@ const Predict = props => {
 			})
 			.catch(err => {
 				setLoading(false);
-				console.error(err.response.data);
+				console.log(err.response.data,err.response.data.message);
 				createMsg(5000, err.response.data, "failure", true);
 			});
 	}
 
-	const updateGistPart = (newval, target1, target2) => {
+	const updateGistPart = (newval, target1, target2,target3) => {
 		const newGist = { ...gist };
-		if (target1 === "evidence" || target1 === "witness") {
-			newGist[target1][target2] = newval;
+		if (target1 === "evidence" && target2 && target3) {
+			newGist[target1][target2][target3] = parseInt(newval);
 		} else {
 			newGist[target1] = newval;
 		}
@@ -72,19 +75,10 @@ const Predict = props => {
 		data.penalCode = data.penalCode.split(",");
 		data.penalCode = data.penalCode.map(pc => parseInt(pc));
 		data.victim = data.victim.split(",");
-		data.evidence.for = data.evidence.for.toLowerCase();
-		data.evidence.against = data.evidence.against.toLowerCase();
-		data.evidence.for = data.evidence.for.split(",");
-		data.evidence.against = data.evidence.against.split(",");
+		data.prosecution = data.prosecution.split(",");
 		console.log(data);
-		axios.put(`/api/intelligence/predict/${data.id}`, data)
+		axios.put(`/api/intelligence/${props.medium}/${data.id}`, data)
 			.then(res => {
-				res.data.accused = res.data.accused.join(",");
-				res.data.penalCode = res.data.penalCode.join(",");
-				res.data.victim = res.data.victim.join(",");
-				res.data.evidence.for = res.data.evidence.for.join(",");
-				res.data.evidence.against = res.data.evidence.against.join(",");
-				res.data.witness = res.data.witness || {}
 				console.log(res.data);
 				setTimeout(() => {
 					setLoading(false);
@@ -115,7 +109,7 @@ const Predict = props => {
 						<FileInput handleFileChange={setFile} handleFileSubmit={handleFileSubmit} err={msg.category === "failure" ? true : false} />
 						:
 							result === null?
-							<GistUpdateForm medium="predict" handleGistUpdate={handleGistUpdateAndPredict} updateGistPart={updateGistPart} gist={{...gist}} />
+							<GistUpdateForm {...props} handleGistUpdate={handleGistUpdateAndPredict} updateGistPart={updateGistPart} gist={{...gist}} />
 							:
 							<Container>
 								{result}

@@ -186,7 +186,7 @@ svg {
   margin-top: 2rem;
   padding: 0.75rem;
   min-height: 6vh;
-  min-width: 15vw;
+  width: 15vw;
   outline: none;
   font-size: 1.5rem;
   margin-bottom: 2rem;
@@ -200,7 +200,7 @@ svg {
   transition: 0.25s linear;
   margin-top: 2rem;
   padding: 0.75rem;
-  height: 6vh;
+  min-height: 6vh;
   width: 15vw;
   outline: none;
   font-size: 1.5rem;
@@ -220,4 +220,19 @@ svg {
 .training label {
   font-size: 1.5rem;
   text-shadow: 1px 1px black;
+}
+
+.evidence {
+  display: flex;
+  margin: 1rem 0;
+}
+
+.evidence input {
+  width: 40%!important;
+  float: right;
+}
+
+.evidence label {
+  width: 60%;
+  float: left;
 }

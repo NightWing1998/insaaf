@@ -1,5 +1,4 @@
 import React from 'react';
-import Train from "./components/Train";
 import Predict from "./components/Predict";
 import LandingPage from "./components/Landing";
 import { Switch, Route } from "react-router-dom";
@@ -11,8 +10,8 @@ function App() {
 	return (
 		<Switch>
 			<Route exact path="/" render={() => <LandingPage />} />
-			<Route exact path="/train" render={() => <Train />} />
-			<Route exact path="/predict" render={() => <Predict />} />
+			<Route exact path="/predict" render={() => <Predict medium="predict" />} />
+			<Route exact path="/train" render={() => <Predict medium="train" />} />
 			<Route exact path="/gif" render={() => (
 				<center>
 					<img src={law_loading} alt="Loading" style={{marginTop: "30vh"}} />

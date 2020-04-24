@@ -8,7 +8,7 @@ const Notification = props => {
 	if (message === null) return <></>;
 	else if (category === "success") {
 		return <Message positive>
-			{props.header ?
+			{header ?
 				<Message.Header>{message}</Message.Header>
 				:
 				message
@@ -18,7 +18,7 @@ const Notification = props => {
 	} else if (category === "failure") {
 		return <Message negative>
 			{header ?
-				<Message.Header>{message.error}</Message.Header>
+				<Message.Header>{message.error || message.message}</Message.Header>
 				:
 				message
 			}
