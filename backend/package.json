@@ -1,40 +1,40 @@
 {
-  "name": "insaaf",
-  "version": "1.0.0",
-  "description": "insaaf companion",
-  "main": "index.js",
-  "scripts": {
-    "start": "NODE_ENV=PRODUCTION node .",
-    "server": "NODE_ENV=DEVELOPMENT nodemon .",
-    "database": "mongod --config /usr/local/etc/mongod.conf",
-    "test": "NODE_ENV=TEST jest --verbose",
-    "watch": "npm run database & npm run server"
-  },
-  "keywords": [
-    "ml",
-    "ai",
-    "judge-companion"
-  ],
-  "author": "NightWing1998",
-  "license": "MIT",
-  "dependencies": {
-    "axios": "^0.19.2",
-    "cookie-parser": "^1.4.4",
-    "dotenv": "^8.1.0",
-    "express": "^4.17.1",
-    "mongoose": "^5.7.9",
-    "mongoose-unique-validator": "^2.0.3",
-    "multer": "^1.4.2",
-    "natural": "^0.6.3",
-    "pdf-parse": "^1.1.1",
-    "pos": "^0.4.2",
-    "stopword": "^0.3.4",
-    "supertest": "^4.0.2"
-  },
-  "devDependencies": {
-    "cross-env": "^6.0.3",
-    "eslint": "^6.6.0",
-    "jest": "^25.3.0",
-    "nodemon": "^2.0.2"
-  }
+	"name": "insaaf",
+	"version": "1.0.0",
+	"description": "insaaf companion",
+	"main": "index.js",
+	"scripts": {
+		"start": "NODE_ENV=PRODUCTION node .",
+		"server": "NODE_ENV=DEVELOPMENT nodemon --ignore dataset.json .",
+		"database": "mongod --config /usr/local/etc/mongod.conf",
+		"test": "NODE_ENV=TEST jest --verbose",
+		"watch": "npm run database & npm run server"
+	},
+	"keywords": [
+		"ml",
+		"ai",
+		"judge-companion"
+	],
+	"author": "NightWing1998",
+	"license": "MIT",
+	"dependencies": {
+		"axios": "^0.19.2",
+		"cookie-parser": "^1.4.4",
+		"dotenv": "^8.1.0",
+		"express": "^4.17.1",
+		"mongoose": "^5.7.9",
+		"mongoose-unique-validator": "^2.0.3",
+		"multer": "^1.4.2",
+		"natural": "^0.6.3",
+		"pdf-parse": "^1.1.1",
+		"pos": "^0.4.2",
+		"stopword": "^0.3.4",
+		"supertest": "^4.0.2"
+	},
+	"devDependencies": {
+		"cross-env": "^6.0.3",
+		"eslint": "^6.6.0",
+		"jest": "^25.3.0",
+		"nodemon": "^2.0.2"
+	}
 }

@@ -221,8 +221,11 @@ svg {
 }
 
 .inp {
-  box-shadow: 0 0 10px 5px rgba(0,5,0.3,0.1)!important;
+  /* box-shadow: 0 0 10px 5px rgba(0,5,0.3,0.1)!important; */
+  box-shadow: 0 0 10px 5px rgba(200,200,200,0.9)!important;
   border-radius: 70px!important;
+  background-color: rgb(5,3,3)!important;
+  color: white!important;
 }
 
 .dropdown.inp.ui.selection * {

@@ -3,7 +3,7 @@ const
 	http = require("http"),
 	mongoose = require("mongoose"),
 	constant = require("./constants"),
-	Case = require("./models/case"),
+	// Case = require("./models/case"),
 	fs = require("fs");
 
 const mongoUri = constant("DATABASE");
@@ -23,13 +23,16 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 	if (!fs.existsSync("./case_files")) {
 		fs.mkdirSync("./case_files");
 	}
+	if(!fs.existsSync("./dataset.json")){
+		fs.writeFileSync("./dataset.json",{data: []});
+	}
 	mongoose.connect(mongoUri, mongoConnectionOptions,
 		(dbErr) => {
 			if (dbErr) console.log(mongoUri, dbErr);
 			else console.log("Connected to database ", mongoUri);
-			if(constant("NODE_ENV") !== "PRODUCTION"){
-				Case.deleteMany({}).then(res => console.log("Cleared Cases", res));
-			}
+			// if(constant("NODE_ENV") !== "PRODUCTION"){
+			// 	Case.deleteMany({}).then(res => console.log("Cleared Cases", res));
+			// }
 		}
 	);
 });

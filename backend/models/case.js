@@ -123,7 +123,7 @@ let caseSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	oppurtunity: {
+	opportunity: {
 		type: Boolean,
 		default: false
 	},
@@ -138,7 +138,8 @@ let caseSchema = new mongoose.Schema({
 	caseStart: {
 		type: String,
 		minlength: 7,
-		maxlength: 7
+		maxlength: 7,
+		default: "0000/00"
 	}
 }).set("toJSON", {
 	transform: (doc, returnObject) => {

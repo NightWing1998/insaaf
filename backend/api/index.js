@@ -1,5 +1,5 @@
 // THIS PAGE HANDLES ALL THE INSAAF API RELATED CONSTRAINTS
-// 
+//
 // REQUIRES :- digitalIPC, ALgo to find severity,database for case handling
 const router = require("express").Router();
 const Case = require("../models/case");
@@ -9,17 +9,17 @@ const axios = require("axios");
 const constants = require("../constants");
 
 const dateDiff = (date1, date2) => {
-	const months = [date1.getMonth(),date2.getMonth()];
+	const months = [date1.getMonth(), date2.getMonth()];
 	const years = [date1.getFullYear(), date2.getFullYear()];
 	let totalMonths = 0;
-	if(months[0] < months[1]){
+	if (months[0] < months[1]) {
 		totalMonths += 12 - months[1] + months[0];
 		years[0] -= 1;
 	} else {
-		totalMonths += (months[0] - months[1]);
+		totalMonths += months[0] - months[1];
 	}
 
-	totalMonths += (years[0] - years[1])*12;
+	totalMonths += (years[0] - years[1]) * 12;
 
 	return totalMonths;
 };
@@ -34,42 +34,54 @@ const dateDiff = (date1, date2) => {
 	evidence: for: Object(key : data | list) against: Object(key : data | list)
 */
 const predict = async (caseData) => {
-	const {means, motive, opportunity, caseStart, witness, evidence} = caseData;
-	if(!caseStart || caseStart.length !== 7){
+	const { means, motive, opportunity, caseStart, witness, evidence } = caseData;
+	if (!caseStart || caseStart.length !== 7) {
 		const err = new Error();
 		err.message = `Case start (${caseStart}) is invalid`;
 		err.name = "MongooseValidationError";
 		throw err;
 	}
-	const time_since_petition_filed = dateDiff(new Date(),new Date(caseStart.split("/")[0],caseStart.split("/")[1]));
-	console.log(time_since_petition_filed);
+	const time_since_petition_filed = dateDiff(
+		new Date(),
+		new Date(caseStart.split("/")[0], caseStart.split("/")[1])
+	);
 
-	return (await axios.post(`${constants("ML_URL")}/predict`,{
-		means, motive, opportunity,
-		time_since_petition_filed: 101,
-		witness, evidence
-	})).data;
+	return (
+		await axios.post(`${constants("ML_URL")}/predict`, {
+			means,
+			motive,
+			opportunity,
+			time_since_petition_filed: time_since_petition_filed,
+			witness,
+			evidence,
+		})
+	).data;
 };
 
 router.put("/predict/:id", async (req, res, next) => {
 	const caseId = req.params.id;
 	try {
 		let updatedCaseFile = await Case.findByIdAndUpdate(caseId, req.body, {
-			new: true
+			new: true,
 		});
-		if(updatedCaseFile === null){
+		if (updatedCaseFile === null) {
 			return res.status(404).json({
 				message: "Case file not found",
-				error: true
+				error: true,
 			});
 		}
-		let temp = updatedCaseFile.toJSON();
-		console.log(temp);
+		// let temp = updatedCaseFile.toJSON();
+		// console.log(temp);
 
 		// Predict here
-		const caseResult = await predict(updatedCaseFile.toJSON());
+		const caseResult = (await predict(updatedCaseFile.toJSON())).result;
+		const suggestion = { suggestion: caseResult };
 
-		res.status(201).json(caseResult);
+		if (caseId === "guilty") {
+			suggestion.punishment = ["XXXXXX fine", "14 years of imprisonment"];
+		}
+
+		res.status(201).json(suggestion);
 
 		// res.status(201).json(temp);
 	} catch (exception) {
@@ -79,38 +91,106 @@ router.put("/predict/:id", async (req, res, next) => {
 
 router.post("/predict", async (req, res, next) => {
 	try {
-
 		// const caseResult = await predict(req.body);
 		const caseResult = await predict({
-			"victim": "Vinay",
-			"accused": "Sachin Khanna",
-			"penalCodes": [
-				302
-			],
-			"means": 1,
-			"motive": 0,
-			"opportunity": 1,
-			"evidence": {
-				"for": {},
-				"against": {
-					"murder_weapon": "bat",
-					"forensic_reports": [
-						"ct scan",
-						"post mortem",
-						"blood stained clothes"
-					],
-					"dying_declaration": true
-				}
+			victim: "Ganalal Gupta",
+			accused: "Moinuddin Ahmed Makandar",
+			penalCodes: [302],
+			means: 0,
+			motive: 0,
+			opportunity: 0,
+			evidence: {
+				for: {
+					oral: 0,
+					documentary: 0,
+					primary: 0,
+					secondary: 0,
+					real: 0,
+					hearsay: 0,
+					judicial: 0,
+					non_judicial: 0,
+					direct: 0,
+					circumstantial: 0,
+					eye_witness: 0,
+					hostile_witness: 0,
+					representing_witness: 0,
+				},
+				against: {
+					oral: 0,
+					documentary: 1,
+					primary: 1,
+					secondary: 0,
+					real: 0,
+					hearsay: 0,
+					judicial: 0,
+					non_judicial: 0,
+					direct: 0,
+					circumstantial: 1,
+					Eye_witness: 0,
+					hostile_witness: 0,
+					representing_witness: 10,
+				},
 			},
-			"witness": {
-				"for": 0,
-				"against": 10
-			},
-			"caseStart": "2009/03"
+			caseStart: "2009/10",
 		});
 
 		res.status(201).json(caseResult);
+	} catch (error) {
+		next(error);
+	}
+});
 
+router.put("/train/:id", async (req, res, next) => {
+	const caseId = req.params.id;
+	try {
+		let updatedCaseFile = await Case.findByIdAndUpdate(caseId, req.body, {
+			new: true,
+		});
+		if (updatedCaseFile === null) {
+			return res.status(404).json({
+				message: "Case file not found",
+				error: true,
+			});
+		}
+
+		let temp = {
+			...updatedCaseFile.toJSON(),
+			time_since_petition_filed: dateDiff(
+				new Date(),
+				new Date(
+					updatedCaseFile.caseStart.split("/")[0],
+					updatedCaseFile.caseStart.split("/")[1]
+				)
+			),
+			conclusion: updatedCaseFile.incomplete
+				? "need more evidence"
+				: updatedCaseFile.guilty
+				? "guilty"
+				: "not guilty",
+			opportunity: updatedCaseFile.oppurtunity,
+		};
+
+		const data = JSON.parse(
+			fs.readFileSync(path.resolve(__dirname, "..", "dataset.json")).toString()
+		).data;
+		data.push(temp);
+
+		fs.writeFileSync(
+			path.resolve(__dirname, "..", "dataset.json"),
+			JSON.stringify({ data })
+		);
+
+		const trained = (
+			await axios.post(`${constants("ML_URL")}/train`, data, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+		).data;
+
+		// console.log(trained);
+
+		res.status(201).json(trained);
 	} catch (error) {
 		next(error);
 	}
@@ -118,16 +198,19 @@ router.post("/predict", async (req, res, next) => {
 
 router.post("/train", async (req, res, next) => {
 	try {
+		const data = JSON.parse(
+			fs.readFileSync(path.resolve(__dirname, "..", "dataset.json")).toString()
+		).data;
 
-		const data = JSON.parse(fs.readFileSync(path.resolve(__dirname,"..","dataset.json")).toString()).data;
+		const trained = (
+			await axios.post(`${constants("ML_URL")}/train`, data, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+		).data;
 
-		const trained = (await axios.post(`${constants("ML_URL")}/train`,data,{
-			headers: {
-				"Content-Type":"application/json"
-			}
-		})).data;
-
-		console.log(trained);
+		// console.log(trained);
 
 		res.status(201).json(trained);
 	} catch (error) {
@@ -137,12 +220,11 @@ router.post("/train", async (req, res, next) => {
 
 router.get("/train/dataset", async (req, res, next) => {
 	try {
-
-		if(!req.query.password || req.query.password !== "1234"){
+		if (!req.query.password || req.query.password !== "1234") {
 			throw new Error("Password invalid");
 		}
 		// console.log(path.resolve(__dirname,"..","dataset.json"),fs.readFileSync(path.resolve(__dirname,"..","dataset.json")).toString());
-		res.download(path.resolve(__dirname,"..","dataset.json"));
+		res.download(path.resolve(__dirname, "..", "dataset.json"));
 	} catch (e) {
 		next(e);
 	}

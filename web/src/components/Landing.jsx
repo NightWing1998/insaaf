@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, List, Grid, Image } from "semantic-ui-react";
+import { Container, List, Grid, Image, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import "../App.css";
 
@@ -59,7 +59,7 @@ const Page = props => {
 					<span className="title underline">IDEAL</span>
 				</div>
 				<div className="text">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
+					Court cases are judicial matters and as it's rightly said: "Justice delayed is justice denied". Court cases should deliver an unbiased judgement such that it is righteous to all the parties involved.
 				</div>
 			</div>
 			<div>
@@ -69,7 +69,7 @@ const Page = props => {
 					</span>
 				</div>
 				<div className="text">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
+					There are in all 3.3 crore cases pending in India by August 2019. There aren’t enough judges per case to lighten this backlog and the situation is just exacerbating.
 				</div>
 			</div>
 			<div>
@@ -79,11 +79,17 @@ const Page = props => {
 					</span>
 				</div>
 				<div className="text">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
-					<br />
-					<button className="btn"><Link to="/predict" style={{ color: "inherit" }}><span style={{ color: "inherit" }}>Suggest Notions</span></Link></button>
+					To build an autonomous intelligent system that could help the judge label a person guilty, not guilty or need more evidence and suggest a suitable notion for the same. The judge can further accept or reject the notion.
 				</div>
 			</div>
+
+			<button className="btn">
+				<Link to="/predict" style={{ color: "inherit" }}>
+					<span style={{ color: "inherit" }}>
+						Get Started <Icon name="angle double right" />
+					</span>
+				</Link>
+			</button>
 
 		</Container>
 	)
