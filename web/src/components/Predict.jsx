@@ -57,6 +57,33 @@ const Predict = props => {
 			});
 	}
 
+	const getGistByCaseNumber = (caseNumber) => {
+		console.log(`/api/case`,caseNumber);
+		setLoading(true);
+		axios.get(`/api/case`,{
+			params: {caseNumber}
+		})
+			.then(res => {
+				res.data.accused = res.data.accused.join(",");
+				res.data.penalCode = res.data.penalCode.join(",");
+				res.data.victim = res.data.victim.join(",");
+				res.data.prosecution = res.data.prosecution.join(",");
+				console.log(res.data);
+				// console.log(Object.keys(res.data["evidence"]["for"]).map(evidence => [evidence,res.data["evidence"]["for"][evidence]]))
+				setTimeout(() => {
+					setGist(res.data);
+					setLoading(false);
+					createMsg(5000, "Case details successfully extracted!", "success", true);
+				}, 5000);
+			})
+			.catch(err => {
+				setLoading(false);
+				console.log(err.response.data,err.response.data.message);
+				createMsg(5000, err.response.data, "failure", true);
+			});
+
+	}
+
 	const updateGistPart = (newval, target1, target2,target3) => {
 		const newGist = { ...gist };
 		if (target1 === "evidence" && target2 && target3) {
@@ -108,7 +135,7 @@ const Predict = props => {
 				<>
 					{msg.message !== null ? <Notification {...msg} /> : <></>}
 					{gist === null ?
-						<FileInput handleFileChange={setFile} handleFileSubmit={handleFileSubmit} err={msg.category === "failure" ? true : false} />
+						<FileInput getGistByCaseNumber={getGistByCaseNumber} handleFileChange={setFile} handleFileSubmit={handleFileSubmit} err={msg.category === "failure" ? true : false} />
 						:
 							result === null?
 							<GistUpdateForm {...props} handleGistUpdate={handleGistUpdateAndPredict} updateGistPart={updateGistPart} gist={{...gist}} />

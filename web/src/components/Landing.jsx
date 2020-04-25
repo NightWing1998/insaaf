@@ -56,7 +56,7 @@ const Page = props => {
 			</List>
 			<div>
 				<div style={{margin: "1rem 0"}}>
-					<span className="title">IDEAL</span>
+					<span className="title underline">IDEAL</span>
 				</div>
 				<div className="text">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
@@ -64,7 +64,7 @@ const Page = props => {
 			</div>
 			<div>
 				<div style={{margin: "1rem 0"}}>
-					<span className="title">
+					<span className="title underline">
 					REALITY
 					</span>
 				</div>
@@ -74,7 +74,7 @@ const Page = props => {
 			</div>
 			<div>
 				<div style={{margin: "1rem 0"}}>
-					<span className="title">
+					<span className="title underline">
 					SOLUTION
 					</span>
 				</div>

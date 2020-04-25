@@ -75,7 +75,7 @@ const GistUpdateComponent = ({medium, handleGistUpdate, updateGistPart, gist}) =
 		setSelectedAg(nonZeros);
 		setAvailAg(difference(availEviAgSet,nonZeros));
 
-	},[]);
+	},[gist]);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -101,7 +101,7 @@ const GistUpdateComponent = ({medium, handleGistUpdate, updateGistPart, gist}) =
 				</Grid.Column>
 				
 				<Grid.Column>
-					<label htmlFor="caseStart">Case Start</label>
+					<label htmlFor="caseStart">Case Start (YYYY/MM)</label>
 				</Grid.Column>
 				<Grid.Column width={6} >
 						<input className="inp" type="text" value={gist["caseStart"]} name="caseStart" onChange={({ target }) => updateGistPart(target.value, "caseStart")} />
@@ -235,9 +235,10 @@ const GistUpdateComponent = ({medium, handleGistUpdate, updateGistPart, gist}) =
 								value={forSelect}
 								onChange={(e, { value }) => setForSelect(value)}
 								className="inp"
+								style={{margin: "1rem"}}
 							/>
 
-							<Button icon="add" onClick={(e) => {e.preventDefault();updateSelectionFor(gist["evidence"]["for"][forSelect],forSelect,);setForSelect("");}} />
+							<Button icon="add" color="black" className="inp" onClick={(e) => {e.preventDefault();updateSelectionFor(gist["evidence"]["for"][forSelect],forSelect,);setForSelect("");}} />
 						
 					</Grid.Column>
 					
@@ -273,9 +274,10 @@ const GistUpdateComponent = ({medium, handleGistUpdate, updateGistPart, gist}) =
 								className="inp"
 								value={agSelect}
 								onChange={(e, { value }) => setAgSelect(value)}
+								style={{margin: "1rem"}}
 							/>
 
-							<Button icon="add" onClick={(e) => {e.preventDefault();updateSelectionAg(gist["evidence"]["against"][agSelect],agSelect);setAgSelect("");}} />
+							<Button icon="add" color="black" className="inp" onClick={(e) => {e.preventDefault();updateSelectionAg(gist["evidence"]["against"][agSelect],agSelect);setAgSelect("");}} />
 					</Grid.Column>
 					
 				</Grid.Row>
@@ -289,7 +291,8 @@ const GistUpdateComponent = ({medium, handleGistUpdate, updateGistPart, gist}) =
 
 	return (
 		<div>
-			<Form onSubmit={handleSubmit} style={{ margin: "5rem" }}>
+			<h1 style={{margin: "1rem 5rem"}}><span className="title">Case Details</span></h1>
+			<Form onSubmit={handleSubmit} style={{ margin: "1rem 5rem" }}>
 				<Grid columns="equal" doubling>
 					{constantRender}
 

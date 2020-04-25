@@ -70,10 +70,22 @@ app.post("/api/case", upload.single("case"), async (req, res, next) => {
 
 app.get("/api/case", async (req, res, next) => {
 	try {
-		const cases = await Case.find({});
-		res.status(200).json({
-			cases
-		});
+		const {caseNumber} = req.query;
+		if(caseNumber === undefined){
+			const cases = await Case.find({});
+			res.status(200).json({
+				cases
+			});
+		} else {
+			const caseFile = (await Case.findOne({caseNumber}));
+			if(caseFile === null){
+				return res.status(404).json({
+					message: `A case file with number (${caseNumber}) does not exist`,
+					error : true
+				});
+			}
+			res.status(200).json(caseFile.toJSON());
+		}
 	} catch (e) {
 		next(e);
 	}
