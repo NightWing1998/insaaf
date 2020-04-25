@@ -79,3 +79,5 @@ __pycache__
 env/
 
 dataset.json
+
+docker-compose.cloud.yml

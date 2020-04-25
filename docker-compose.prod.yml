@@ -6,21 +6,21 @@ services:
     build:
       context: ./backend
       dockerfile: prod.Dockerfile
-    image: containerService/backend:1.0
+    image: backend:1.0
 
   frontend:
     container_name: frontend
-    image: containerService/frontend:1.0
+    image: frontend:1.0
     build:
       context: ./web
       dockerfile: prod.Dockerfile
 
   ml:
     container_name: ml
-    image: containerService/ml:1.0
+    image: ml:1.0
     build: "./ml"
 
   proxy:
     container_name: proxy
     build: ./proxy
-    image: containerService/proxy:1.0
+    image: proxy:1.0

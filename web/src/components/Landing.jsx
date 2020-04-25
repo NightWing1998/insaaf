@@ -55,25 +55,29 @@ const Page = props => {
 				</Grid>
 			</List>
 			<div>
-				<button disabled className="title">
-					IDEAL
-				</button>
+				<div style={{margin: "1rem 0"}}>
+					<span className="title">IDEAL</span>
+				</div>
 				<div className="text">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
 				</div>
 			</div>
 			<div>
-				<button disabled className="title">
+				<div style={{margin: "1rem 0"}}>
+					<span className="title">
 					REALITY
-				</button>
+					</span>
+				</div>
 				<div className="text">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
 				</div>
 			</div>
 			<div>
-				<button disabled className="title">
+				<div style={{margin: "1rem 0"}}>
+					<span className="title">
 					SOLUTION
-				</button>
+					</span>
+				</div>
 				<div className="text">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia! Distinctio hic maxime magnam libero suscipit, error ex, corrupti inventore voluptatum quibusdam ducimus neque nihil ipsa. Hic architecto consequuntur saepe.
 					<br />

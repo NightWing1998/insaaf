@@ -96,7 +96,7 @@ app.put("/api/case/:id", async (req, res, next) => {
 			new: true
 		});
 		let temp = updatedCaseFile.toJSON();
-		console.log(temp);
+		// console.log(temp);
 		res.status(201).json(temp);
 	} catch (exception) {
 		next(exception);

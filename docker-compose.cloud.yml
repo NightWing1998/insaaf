@@ -3,21 +3,22 @@ version: "3"
 services:
   backend:
     container_name: backend
-    image: insaaf.azurecr.io/insaaf_backend:1587494043
+    image: backend:1.0
+    # image: insaaf.azurecr.io/insaaf_backend:latest
     ports:
       - "8080:8080"
     links:
-      - mongo
       - ml
     environment:
-      - DATABASE=${MONGODB_URI}
+      - DATABASE=mongodb+srv://azure:ffuMTF4QcdTOrsUF@digitalipcv1-5ahez.mongodb.net/insaaf?retryWrites=true&w=majority
       - PORT=8080
       - NODE_ENV=PRODUCTION
       - ML_URL=http://ml:5000
 
   frontend:
     container_name: frontend
-    image: insaaf.azurecr.io/insaaf_frontend:1587494096
+    image: frontend:1.0
+    # image: insaaf.azurecr.io/insaaf_frontend:latest
     ports:
       - "8081:3000"
     links:
@@ -26,7 +27,8 @@ services:
 
   proxy:
     container_name: proxy
-    image: insaaf.azurecr.io/insaaf_proxy:1587494279
+    image: proxy:1.0
+    # image: insaaf.azurecr.io/insaaf_proxy:latest
     ports:
       - "80:80"
       - "443:443"
@@ -35,8 +37,7 @@ services:
 
   ml:
     container_name: ml
-    image: insaaf.azurecr.io/insaaf_ml:1587494183
+    image: ml:1.0
+    # image: insaaf.azurecr.io/insaaf_ml:latest
     ports:
       - "5000:5000"
-    volumes:
-      - ./ml/:/usr/src/app/

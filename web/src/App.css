@@ -155,19 +155,27 @@ svg {
 /* https://medium.com/cloud-native-the-gathering/how-to-use-css-to-fade-in-and-fade-out-html-text-and-pictures-f45c11364f08 --credits for fade in */
 
 .title {
-  background-color: rgb(5, 3, 3);
-  color: white;
-  box-shadow: -5px 5px 1px rgb(75, 65, 65);
-  text-shadow: -2px 2px 2px rgb(179, 166, 166);
+  /* color: rgb(5,3,3); */
+  /* color: white; */
+  text-shadow: -2px 2px 2px rgba(5,3,3, 0.5);
   transition: 0.25s linear;
-  margin-bottom: 1.5rem;
-  margin-top: 2rem;
   padding: 0.75rem;
+  border: none;
+
+  display: inline;
+
+  background-image: linear-gradient(to left,rgba(5,3,3,0.9),transparent);
+  background-position: 0 1.35em;
+  background-repeat: repeat-x;
+  background-size: 100% 5px;
 }
 
 .title:hover {
-  box-shadow: -7px 7px 2px rgb(87, 80, 80);
-  text-shadow: -2px 2px 4px rgb(196, 184, 184);
+  text-shadow: -2px 2px 4px rgba(5,3,3, 0.5);
+  background-size: 100% 10px;
+  background-position: 0 1.2em;
+  /* background-color: rgba(5,3,3, 0.9); */
+  /* color: white; */
 }
 
 .text {
@@ -212,6 +220,14 @@ svg {
 
 .inp {
   box-shadow: 0 0 10px 5px rgba(0,5,0.3,0.1)!important;
+}
+
+.dropdown.inp.ui.selection * {
+  font-size: 1rem;
+}
+
+.dropdown.inp.ui.selection div {
+  margin-right: 2rem;
 }
 
 .training {

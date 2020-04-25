@@ -61,6 +61,8 @@ const Predict = props => {
 		const newGist = { ...gist };
 		if (target1 === "evidence" && target2 && target3) {
 			newGist[target1][target2][target3] = parseInt(newval);
+		} else if(target1 === "evidence" && target2 && !target3) {
+			newGist[target1][target2] = newval;
 		} else {
 			newGist[target1] = newval;
 		}
