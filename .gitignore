@@ -78,6 +78,9 @@ __pycache__
 
 env/
 
-dataset.json
+dataset/
+model/
 
 docker-compose.cloud.yml
+
+*.sav

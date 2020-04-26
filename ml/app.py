@@ -15,8 +15,8 @@ global model, outputEncoder, evidenceEncoder
 model = None
 outputEncoder = None
 try:
-	model = load("random_forest.sav")
-	outputEncoder = load("output_encoder.sav")
+	model = load("./model/random_forest.sav")
+	outputEncoder = load("./model/output_encoder.sav")
 except FileNotFoundError:
 	print("No saved model exists. Train the model first")
 
@@ -69,8 +69,8 @@ def train():
 		squareError = metrics.mean_squared_error(yTest, result)
 		rmsError = np.sqrt(metrics.mean_squared_error(yTest, result))
 
-		dump(model, "random_forest.sav")
-		dump(outputEncoder, "output_encoder.sav")
+		dump(model, "./model/random_forest.sav")
+		dump(outputEncoder, "./model/output_encoder.sav")
 
 		return make_response(
 			jsonify({

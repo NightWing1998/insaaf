@@ -23,8 +23,12 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 	if (!fs.existsSync("./case_files")) {
 		fs.mkdirSync("./case_files");
 	}
-	if(!fs.existsSync("./dataset.json")){
-		fs.writeFileSync("./dataset.json",{data: []});
+	if(!fs.existsSync("./dataset")){
+		fs.mkdirSync("./dataset");
+		fs.writeFileSync("./dataset/index.json");
+	}
+	if (!fs.existsSync("./dataset/index.json")){
+		fs.writeFileSync("./dataset/index.json",JSON.stringigy({data: []}));
 	}
 	mongoose.connect(mongoUri, mongoConnectionOptions,
 		(dbErr) => {

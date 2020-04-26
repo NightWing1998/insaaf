@@ -6,3 +6,4 @@ db/
 *.test.js*
 test/
 case_files/
+dataset/

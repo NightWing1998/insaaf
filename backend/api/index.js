@@ -165,13 +165,13 @@ router.put("/train/:id", async (req, res, next) => {
 			conclusion: updatedCaseFile.incomplete
 				? "need more evidence"
 				: updatedCaseFile.guilty
-				? "guilty"
-				: "not guilty",
+					? "guilty"
+					: "not guilty",
 			opportunity: updatedCaseFile.oppurtunity,
 		};
 
 		const data = JSON.parse(
-			fs.readFileSync(path.resolve(__dirname, "..", "dataset.json")).toString()
+			fs.readFileSync(path.resolve(__dirname, "..", "dataset","index.json")).toString()
 		).data;
 		data.push(temp);
 
@@ -199,7 +199,7 @@ router.put("/train/:id", async (req, res, next) => {
 router.post("/train", async (req, res, next) => {
 	try {
 		const data = JSON.parse(
-			fs.readFileSync(path.resolve(__dirname, "..", "dataset.json")).toString()
+			fs.readFileSync(path.resolve(__dirname, "..", "dataset","index.json")).toString()
 		).data;
 
 		const trained = (
@@ -223,8 +223,8 @@ router.get("/train/dataset", async (req, res, next) => {
 		if (!req.query.password || req.query.password !== "1234") {
 			throw new Error("Password invalid");
 		}
-		// console.log(path.resolve(__dirname,"..","dataset.json"),fs.readFileSync(path.resolve(__dirname,"..","dataset.json")).toString());
-		res.download(path.resolve(__dirname, "..", "dataset.json"));
+		// console.log(path.resolve(__dirname,"..","dataset.json"),fs.readFileSync(path.resolve(__dirname,"..","dataset","index.json")).toString());
+		res.download(path.resolve(__dirname, "..", "dataset","index.json"));
 	} catch (e) {
 		next(e);
 	}
