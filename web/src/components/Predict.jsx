@@ -215,7 +215,7 @@ const Predict = (props) => {
 												<h2 className="title">{result["suggestion"]}</h2>
 											</Grid.Column>
 											<br />
-											{gist["suggestion"] === "guilty" ? (
+											{result["suggestion"] === "guilty" ? (
 												<>
 													<Responsive
 														minWidth={Responsive.onlyTablet.maxWidth + 1}

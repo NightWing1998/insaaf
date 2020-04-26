@@ -34,7 +34,7 @@ const dateDiff = (date1, date2) => {
 	evidence: for: Object(key : data | list) against: Object(key : data | list)
 */
 const predict = async (caseData) => {
-	const { means, motive, opportunity, caseStart, witness, evidence } = caseData;
+	const { means, motive, opportunity, caseStart, evidence } = caseData;
 	if (!caseStart || caseStart.length !== 7) {
 		const err = new Error();
 		err.message = `Case start (${caseStart}) is invalid`;
@@ -48,11 +48,10 @@ const predict = async (caseData) => {
 
 	return (
 		await axios.post(`${constants("ML_URL")}/predict`, {
-			means,
-			motive,
-			opportunity,
+			means: means?1:0,
+			motive :motive?1:0,
+			opportunity: opportunity?1:0,
 			time_since_petition_filed: time_since_petition_filed,
-			witness,
 			evidence,
 		})
 	).data;
@@ -77,7 +76,7 @@ router.put("/predict/:id", async (req, res, next) => {
 		const caseResult = (await predict(updatedCaseFile.toJSON())).result;
 		const suggestion = { suggestion: caseResult };
 
-		if (caseId === "guilty") {
+		if (caseResult === "guilty") {
 			suggestion.punishment = ["XXXXXX fine", "14 years of imprisonment"];
 		}
 
@@ -167,8 +166,13 @@ router.put("/train/:id", async (req, res, next) => {
 				: updatedCaseFile.guilty
 					? "guilty"
 					: "not guilty",
-			opportunity: updatedCaseFile.oppurtunity,
+			means: updatedCaseFile.means?1:0,
+			motive: updatedCaseFile.motive?1:0,
+			opportunity: updatedCaseFile.means?1:0
 		};
+
+		delete temp.incomplete;
+		delete temp.id;
 
 		const data = JSON.parse(
 			fs.readFileSync(path.resolve(__dirname, "..", "dataset","index.json")).toString()
@@ -176,7 +180,7 @@ router.put("/train/:id", async (req, res, next) => {
 		data.push(temp);
 
 		fs.writeFileSync(
-			path.resolve(__dirname, "..", "dataset.json"),
+			path.resolve(__dirname, "..", "dataset","index.json"),
 			JSON.stringify({ data })
 		);
 

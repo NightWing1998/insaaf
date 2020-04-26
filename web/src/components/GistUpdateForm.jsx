@@ -267,8 +267,8 @@ const GistUpdateComponent = ({
 				<Grid.Column>
 					<Radio
 						toggle
-						checked={gist["oppurtunity"] || false}
-						onChange={() => updateGistPart(!gist["oppurtnity"], "oppurtunity")}
+						checked={gist["opportunity"] || false}
+						onChange={() => updateGistPart(!gist["opportunity"], "opportunity")}
 					/>
 				</Grid.Column>
 			</Grid.Row>
