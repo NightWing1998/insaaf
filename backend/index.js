@@ -28,7 +28,7 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 		fs.writeFileSync("./dataset/index.json");
 	}
 	if (!fs.existsSync("./dataset/index.json")){
-		fs.writeFileSync("./dataset/index.json",JSON.stringigy({data: []}));
+		fs.writeFileSync("./dataset/index.json",JSON.stringify({data: []}));
 	}
 	mongoose.connect(mongoUri, mongoConnectionOptions,
 		(dbErr) => {
