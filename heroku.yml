@@ -1,9 +1,0 @@
-build:
-  docker:
-    web: web/Dockerfile
-    backend: backend/Dockerfile
-  config:
-    SERVER_URL: http://backend/
-run:
-  web: npm start
-  backend: npm start

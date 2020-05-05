@@ -41,20 +41,78 @@ const extractIPCSections = (tokens) => {
 	return ipc;
 };
 
+const extractTimeline = (tokens) => {
+	let start = "";
+	let end = "";
+	let searchParams = ["registered", "decided", "duration", "case", "dated", "date", "delivered"];
+	let flag = true;
+	//console.log(tokens);
+	for (let i = 0; i < tokens.length && flag; i++) {
+		if (tokens[i].toLowerCase() == searchParams[3]) {
+			flag = !flag;
+		}
+		else if (tokens[i].toLowerCase() == searchParams[0]) {
+			start = tokens[i + 1] + "/" + tokens[i + 2] + "/" + tokens[i + 3];
+		}
+		else if (tokens[i].toLowerCase() == searchParams[1] || tokens[i].toLowerCase() == searchParams[6]) {
+			end = tokens[i + 1] + "/" + tokens[i + 2] + "/" + tokens[i + 3];
+		}
+		else if (tokens[i].toLowerCase() == searchParams[2]) {
+			end = tokens[i + 3] + "/" + tokens[i + 2] + "/" + tokens[i + 1];
+			flag = !flag;
+		}
+	}
+	if (start == "" || end == "") {
+		start = extractCaseNo(tokens);
+		let flag = true;
+		let ending = "";
+		for (let i = 0; i < tokens.length && flag; i++) {
+			if (tokens[i].toLowerCase() == searchParams[4] || tokens[i].toLowerCase() == searchParams[5]) {
+				ending = tokens[i + 1] + "/" + tokens[i + 2] + "/" + tokens[i + 3];
+				flag = !flag;
+			}
+		}
+		start = start.split("/")[1];
+		start = "01/01/" + start;
+		let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		ending = ending.split("/");
+		end = parseInt(ending[0]);
+		flag = true;
+		for (let i = 0; i < monthNames.length && flag; i++) {
+			if (ending[1] == monthNames[i]) {
+				i = i + 1;
+				end = end + "/" + i + "/";
+				flag = !flag;
+			}
+		}
+		end = end + ending[2];
+
+	}
+	console.log(start);
+	console.log(end);
+	start = start.split("/");
+	let start1 = new Date(start[2], start[1], start[0]);
+	end = end.split("/");
+	let end1 = new Date(end[2], end[1], end[0]);
+	let years = end1.getFullYear() - start1.getFullYear();
+	let months = (years * 12) + (end1.getMonth() - start1.getMonth());
+	return months;
+};
+
 const extractCaseNo = (tokens) => {
 	let caseNo;
 	let Year;
-	let searchParams = ["case", "no"];
+	let searchParams = ["sessions", "case", "no"];
 	let flag = true;
 	for (let i = 0; i < tokens.length && flag; i++) {
-		if (flag && tokens[i].toLowerCase() === searchParams[0] && tokens[i + 1].toLowerCase() === searchParams[1]) {
+		if (flag && tokens[i].toLowerCase() === searchParams[0] && tokens[i + 1].toLowerCase() === searchParams[1] && tokens[i + 2].toLowerCase() === searchParams[2]) {
 			//console.log(tokens[i]);
 			flag = false;
-			caseNo = tokens[i + 2];
-			Year = tokens[i + 3];
+			caseNo = tokens[i + 3];
+			Year = tokens[i + 4];
 		}
 	}
-	// console.log(caseNo, Year);
+	console.log(caseNo, Year);
 	return caseNo + "/" + Year;
 };
 
