@@ -59,7 +59,7 @@ The installation can be tricky as the system architecture is micro-service based
   - Set the following environment variables:
     ```bash
     CONTAINER_REGISTRY= #URL TO YOUR REGISTRY
-    VERSION="lates" #OR SPECIFIC VERSION FOR EG: 1.0.0
+    VERSION="latest" #OR SPECIFIC VERSION FOR EG: 1.0.0
     ```
   - Run `docker-compose -f docker-compose.prod.yml build` to build the images.
   - Then run `docker-compose -f docker-compose.prod.yml push` to push the images to your registry.
@@ -72,9 +72,9 @@ The installation can be tricky as the system architecture is micro-service based
 
 ## Contributors
 
-- @NightWing1998
-- @shivamsansare
-- @TheRealKamiKaze
+- [NightWing1998](https://github.com/NightWing1998)
+- [shivamsansare](https://github.com/shivamsansare)
+- [TheRealKamikaze](https://github.com/TheRealKamikaze)
 
 ## License
 
