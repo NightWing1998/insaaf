@@ -1,6 +1,4 @@
-# ![alt text](httpS://insaaf.westindia.cloudapp.azure.com/law.ico# "Insaaf Logo") [I.N.S.A.A.F.](https://insaaf.westindia.cloudapp.azure.com/)
-
----
+# <img src="http://insaaf.westindia.cloudapp.azure.com/law.png" alt="insaaf logo" width=32 height=32 > [I.N.S.A.A.F.](https://insaaf.westindia.cloudapp.azure.com/)
 
 The insaaf(impartial notion suggestion and astute functioning) companion. It is a system designed to accelerate the court hearings by giving suggestions to the judges of the indian judicial system.
 
