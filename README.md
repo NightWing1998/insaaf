@@ -67,8 +67,8 @@ The installation can be tricky as the system architecture is micro-service based
 
 ## TODOs
 
-[ ] Add a configuration section to the [README.md](#) to configure the installations
-[ ] Add docs.md to individual service folders to state it's purpose, stack and API endpoints if any.
+- [ ] Add a configuration section to the [README.md](#) to configure the installations
+- [ ] Add docs.md to individual service folders to state it's purpose, stack and API endpoints if any.
 
 ## Contributors
 
