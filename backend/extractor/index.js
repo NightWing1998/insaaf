@@ -88,8 +88,8 @@ const extractTimeline = (tokens) => {
 		end = end + ending[2];
 
 	}
-	console.log(start);
-	console.log(end);
+	// console.log(start);
+	// console.log(end);
 	start = start.split("/");
 	let start1 = new Date(start[2], start[1], start[0]);
 	end = end.split("/");
@@ -112,7 +112,7 @@ const extractCaseNo = (tokens) => {
 			Year = tokens[i + 4];
 		}
 	}
-	console.log(caseNo, Year);
+	// console.log(caseNo, Year);
 	return caseNo + "/" + Year;
 };
 
@@ -180,10 +180,18 @@ const preprocessor = async (casePathAndName) => {
 	let dotSeperated = casePathAndName.split(".");
 	if (dotSeperated[dotSeperated.length - 1] === "pdf") {
 		// convert pdf to txt document.
-		console.log(casePathAndName);
+		// console.log(casePathAndName);
 		const casePdf = fs.readFileSync(casePathAndName);
 		// console.log(casePdf);
+		// backup variable
+		let _window = window;
+
+		// make window undefined for a moment
+		window = undefined;
+
 		const caseObj = await pdfParse(casePdf);
+
+		window = _window
 		fs.unlinkSync(casePathAndName);
 		casePathAndName = dotSeperated.slice(0, dotSeperated.length - 1).join(".") + ".txt";
 

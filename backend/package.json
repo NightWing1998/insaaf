@@ -7,7 +7,7 @@
 		"start": "NODE_ENV=PRODUCTION node .",
 		"server": "NODE_ENV=DEVELOPMENT nodemon --ignore dataset/index.json .",
 		"database": "mongod --config /usr/local/etc/mongod.conf",
-		"test": "NODE_ENV=TEST jest --verbose",
+		"test": "NODE_ENV=TEST jest --verbose --runInBand",
 		"watch": "npm run database & npm run server"
 	},
 	"keywords": [
@@ -36,5 +36,9 @@
 		"jest": "^25.3.0",
 		"nodemon": "^2.0.2",
 		"supertest": "^4.0.2"
+	},
+	"jest": {
+		"transformIgnorePatterns" : ["<rootDir>/node_modules/pdf-parse"],
+		"unmockedModulePathPatterns" : ["<rootDir>/node_modules/pdf-parse"]
 	}
 }
