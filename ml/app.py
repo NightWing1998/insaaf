@@ -33,11 +33,11 @@ def train():
 	try:
 		data = request.get_json()
 		global model, outputEncoder
-		# model = RandomForestClassifier(n_estimators=100,
-		# 								   bootstrap=True,
-		# 								   max_features='sqrt',
-		# 								   n_jobs=-1)
-		model = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 4), random_state=1, )
+		model = RandomForestClassifier(n_estimators=100,
+										   bootstrap=True,
+										   max_features='sqrt',
+										   n_jobs=-1)
+		# model = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 4), random_state=1, )
 
 		outputEncoder = preprocessing.LabelEncoder()
 
