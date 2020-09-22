@@ -1,0 +1,46 @@
+# exposes port 80 of the application to localhost:80 inside app services
+version: "3"
+services:
+  backend:
+    container_name: backend
+    image: ${CONTAINER_REGISTRY}/insaaf_backend:${version}
+    ports:
+      - "8080:8080"
+    links:
+      - ml
+    environment:
+      - DATABASE=mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@digitalipcv1.5ahez.mongodb.net/insaaf?retryWrites=true&w=majority
+      - DATABASE_TEST=mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@digitalipcv1.5ahez.mongodb.net/insaaf-test?retryWrites=true&w=majority
+      - DATABASE_DEVELOPMENT=mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@digitalipcv1.5ahez.mongodb.net/insaaf-dev?retryWrites=true&w=majority
+      - PORT=8080
+      - PORT_DEVELOPMENT=8080
+      - PORT_TEST=8080
+      - NODE_ENV=DEVELOPMENT
+      - ML_URL=http://ml:5000
+      - ML_URL_TEST=http://ml:5000
+      - ML_URL_DEVELOPMENT=http://ml:5000
+
+
+  frontend:
+    container_name: frontend
+    image: ${CONTAINER_REGISTRY}/insaaf_frontend:${version}
+    ports:
+      - "8081:3000"
+    links:
+      - backend
+      - ml
+
+  ml:
+    container_name: ml
+    image: ${CONTAINER_REGISTRY}/insaaf_ml:${version}
+    ports:
+      - "5000:5000"
+
+  proxy:
+    container_name: proxy
+    image: ${CONTAINER_REGISTRY}/insaaf_proxy:${version}
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - frontend
