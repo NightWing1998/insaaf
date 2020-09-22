@@ -1,29 +1,29 @@
 on:
-  push:
-    # Sequence of patterns matched against refs/heads
-    branches:    
-      - master         # Push events on master branch
+    push:
+        # Sequence of patterns matched against refs/heads
+        branches:
+            - master # Push events on master branch
 
 jobs:
-  build-all:
-    runs-on: ubuntu-latest
-    steps:
-    # checkout the repo
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@master
-    
-    - uses: azure/docker-login@v1
-      with:
-        login-server: insaaf.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    
-    - run: |
-        docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t insaaf.azurecr.io/insaaf_backend
-        docker push insaaf.azurecr.io/insaaf_backend
-        docker build ${{github.workspace}}/web/ -f web/prod.Dockerfile -t insaaf.azurecr.io/insaaf_frontend
-        docker push insaaf.azurecr.io/insaaf_frontend
-        docker build ${{github.workspace}}/ml/ --file ml/Dockerfile -t insaaf.azurecr.io/insaaf_ml
-        docker push insaaf.azurecr.io/insaaf_ml
-        docker build ${{github.workspace}}/proxy/ --file proxy/Dockerfile -t insaaf.azurecr.io/insaaf_proxy
-        docker push insaaf.azurecr.io/insaaf_proxy
+    build-all:
+        runs-on: ubuntu-latest
+        steps:
+            # checkout the repo
+            - name: "Checkout GitHub Action"
+              uses: actions/checkout@master
+
+            - uses: azure/docker-login@v1
+              with:
+                  login-server: ${{ secrets.CONTAINER_REGISTRY }}
+                  username: ${{ secrets.REGISTRY_USERNAME }}
+                  password: ${{ secrets.REGISTRY_PASSWORD }}
+
+            - run: |
+                  docker build ${{github.workspace}}/backend/ --file backend/prod.Dockerfile -t ${{ secrets.CONTAINER_REGISTRY }}/insaaf_backend
+                  docker push ${{ secrets.CONTAINER_REGISTRY }}/insaaf_backend
+                  docker build ${{github.workspace}}/web/ -f web/prod.Dockerfile -t ${{ secrets.CONTAINER_REGISTRY }}/insaaf_frontend
+                  docker push ${{ secrets.CONTAINER_REGISTRY }}/insaaf_frontend
+                  docker build ${{github.workspace}}/ml/ --file ml/Dockerfile -t ${{ secrets.CONTAINER_REGISTRY }}/insaaf_ml
+                  docker push ${{ secrets.CONTAINER_REGISTRY }}/insaaf_ml
+                  docker build ${{github.workspace}}/proxy/ --file proxy/Dockerfile -t ${{ secrets.CONTAINER_REGISTRY }}/insaaf_proxy
+                  docker push ${{ secrets.CONTAINER_REGISTRY }}/insaaf_proxy

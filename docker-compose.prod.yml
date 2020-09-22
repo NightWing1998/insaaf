@@ -6,21 +6,21 @@ services:
     build:
       context: ./backend
       dockerfile: prod.Dockerfile
-    image: ${CONTAINER_REGISTRY}/backend:${version}
+    image: ${CONTAINER_REGISTRY}/insaaf_backend:${version}
 
   frontend:
     container_name: frontend
-    image: ${CONTAINER_REGISTRY}/frontend:${version}
+    image: ${CONTAINER_REGISTRY}/insaaf_frontend:${version}
     build:
       context: ./web
       dockerfile: prod.Dockerfile
 
   ml:
     container_name: ml
-    image: ${CONTAINER_REGISTRY}/ml:${version}
+    image: ${CONTAINER_REGISTRY}/insaaf_ml:${version}
     build: "./ml"
 
   proxy:
     container_name: proxy
     build: ./proxy
-    image: ${CONTAINER_REGISTRY}/proxy:${version}
+    image: ${CONTAINER_REGISTRY}/insaaf_proxy:${version}
