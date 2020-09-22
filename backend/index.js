@@ -25,7 +25,7 @@ server.listen(constant("PORT"), constant("IP"), async (err) => {
 	}
 	if(!fs.existsSync("./dataset")){
 		fs.mkdirSync("./dataset");
-		fs.writeFileSync("./dataset/index.json");
+		fs.writeFileSync("./dataset/index.json", JSON.stringify({data: []}));
 	}
 	if (!fs.existsSync("./dataset/index.json")){
 		fs.writeFileSync("./dataset/index.json",JSON.stringify({data: []}));
