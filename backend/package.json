@@ -38,7 +38,11 @@
 		"supertest": "^4.0.2"
 	},
 	"jest": {
-		"transformIgnorePatterns" : ["<rootDir>/node_modules/pdf-parse"],
-		"unmockedModulePathPatterns" : ["<rootDir>/node_modules/pdf-parse"]
+		"transformIgnorePatterns": [
+			"<rootDir>/node_modules/pdf-parse"
+		],
+		"unmockedModulePathPatterns": [
+			"<rootDir>/node_modules/pdf-parse"
+		]
 	}
 }
