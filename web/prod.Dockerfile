@@ -1,5 +1,5 @@
 # build phase
-FROM node:13.6.0-alpine3.11 as build
+FROM node:14.11.0-alpine3.12 as build
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install
