@@ -184,14 +184,12 @@ const preprocessor = async (casePathAndName) => {
 		const casePdf = fs.readFileSync(casePathAndName);
 		// console.log(casePdf);
 		// backup variable
-		let _window = window;
-
-		// make window undefined for a moment
-		window = undefined;
+		let _window;
+		if(window){ _window = window; window = undefined;}
 
 		const caseObj = await pdfParse(casePdf);
 
-		window = _window
+		if(_window) window = _window;
 		fs.unlinkSync(casePathAndName);
 		casePathAndName = dotSeperated.slice(0, dotSeperated.length - 1).join(".") + ".txt";
 
