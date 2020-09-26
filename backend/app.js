@@ -1,6 +1,5 @@
 // THIS PAGE HANDLES ROUTES
-const
-	express = require("express"),
+const express = require("express"),
 	app = express(),
 	multer = require("multer"),
 	gistExtractor = require("./extractor/index"),
@@ -22,17 +21,19 @@ const storage = multer.diskStorage({
 	},
 	filename: function (req, file, cb) {
 		cb(null, file.originalname);
-	}
+	},
 });
 
 const upload = multer({
 	fileFilter: caseFilterer,
-	storage: storage
+	storage: storage,
 });
 
-app.use(express.urlencoded({
-	extended: false
-}));
+app.use(
+	express.urlencoded({
+		extended: false,
+	})
+);
 app.use(express.json({}));
 
 app.use(middleware.requestLogger);
@@ -47,14 +48,13 @@ app.post("/api/case", upload.single("case"), async (req, res, next) => {
 			caseNumber: gist.caseNumber,
 			victim: gist.victim,
 			penalCode: gist.penalCodes,
-			accused: gist.accused
+			accused: gist.accused,
 		});
 		let savedCase = await newCase.save();
 		res.status(201).json(savedCase.toJSON());
 	} catch (exception) {
 		next(exception);
 	}
-
 });
 
 // app.post("/api/case/force", async (req, res, next) => {
@@ -70,18 +70,18 @@ app.post("/api/case", upload.single("case"), async (req, res, next) => {
 
 app.get("/api/case", async (req, res, next) => {
 	try {
-		const {caseNumber} = req.query;
-		if(caseNumber === undefined){
+		const { caseNumber } = req.query;
+		if (caseNumber === undefined) {
 			const cases = await Case.find({});
 			res.status(200).json({
-				cases
+				cases,
 			});
 		} else {
-			const caseFile = (await Case.findOne({caseNumber}));
-			if(caseFile === null){
+			const caseFile = await Case.findOne({ caseNumber });
+			if (caseFile === null) {
 				return res.status(404).json({
 					message: `A case file with number (${caseNumber}) does not exist`,
-					error : true
+					error: true,
 				});
 			}
 			res.status(200).json(caseFile.toJSON());
@@ -105,7 +105,7 @@ app.put("/api/case/:id", async (req, res, next) => {
 	const caseId = req.params.id;
 	try {
 		let updatedCaseFile = await Case.findByIdAndUpdate(caseId, req.body, {
-			new: true
+			new: true,
 		});
 		let temp = updatedCaseFile.toJSON();
 		// console.log(temp);
@@ -113,7 +113,6 @@ app.put("/api/case/:id", async (req, res, next) => {
 	} catch (exception) {
 		next(exception);
 	}
-
 });
 
 app.delete("/api/case/:id", async (req, res, next) => {

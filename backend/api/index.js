@@ -48,9 +48,9 @@ const predict = async (caseData) => {
 
 	return (
 		await axios.post(`${constants("ML_URL")}/predict`, {
-			means: means?1:0,
-			motive :motive?1:0,
-			opportunity: opportunity?1:0,
+			means: means ? 1 : 0,
+			motive: motive ? 1 : 0,
+			opportunity: opportunity ? 1 : 0,
 			time_since_petition_filed: time_since_petition_filed,
 			evidence,
 		})
@@ -164,23 +164,27 @@ router.put("/train/:id", async (req, res, next) => {
 			conclusion: updatedCaseFile.incomplete
 				? "need more evidence"
 				: updatedCaseFile.guilty
-					? "guilty"
-					: "not guilty",
-			means: updatedCaseFile.means?1:0,
-			motive: updatedCaseFile.motive?1:0,
-			opportunity: updatedCaseFile.means?1:0
+				? "guilty"
+				: "not guilty",
+			means: updatedCaseFile.means ? 1 : 0,
+			motive: updatedCaseFile.motive ? 1 : 0,
+			opportunity: updatedCaseFile.means ? 1 : 0,
 		};
 
 		delete temp.incomplete;
 		delete temp.id;
 
 		const data = JSON.parse(
-			fs.readFileSync(path.resolve(__dirname, "..", "dataset","index.json")).toString()
+			fs
+				.readFileSync(
+					path.resolve(__dirname, "..", "dataset", "index.json")
+				)
+				.toString()
 		).data;
 		data.push(temp);
 
 		fs.writeFileSync(
-			path.resolve(__dirname, "..", "dataset","index.json"),
+			path.resolve(__dirname, "..", "dataset", "index.json"),
 			JSON.stringify({ data })
 		);
 
@@ -200,10 +204,29 @@ router.put("/train/:id", async (req, res, next) => {
 	}
 });
 
+router.post("/train/dataset", async (req, res, next) => {
+	try {
+		const { data, password } = req.body;
+		if (!password || password !== "1234")
+			throw new Error("Invalid Password");
+		fs.writeFileSync(
+			path.resolve(__dirname, "..", "dataset", "index.json"),
+			JSON.stringify({ data })
+		);
+		res.status(201).end();
+	} catch (e) {
+		next(e);
+	}
+});
+
 router.post("/train", async (req, res, next) => {
 	try {
 		const data = JSON.parse(
-			fs.readFileSync(path.resolve(__dirname, "..", "dataset","index.json")).toString()
+			fs
+				.readFileSync(
+					path.resolve(__dirname, "..", "dataset", "index.json")
+				)
+				.toString()
 		).data;
 
 		const trained = (
@@ -228,7 +251,7 @@ router.get("/train/dataset", async (req, res, next) => {
 			throw new Error("Password invalid");
 		}
 		// console.log(path.resolve(__dirname,"..","dataset.json"),fs.readFileSync(path.resolve(__dirname,"..","dataset","index.json")).toString());
-		res.download(path.resolve(__dirname, "..", "dataset","index.json"));
+		res.download(path.resolve(__dirname, "..", "dataset", "index.json"));
 	} catch (e) {
 		next(e);
 	}

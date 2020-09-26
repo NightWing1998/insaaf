@@ -281,7 +281,7 @@ const gistInJSON = async (casePathAndName) => {
 		prosecution: ["The State"],
 		victim: extractVictim(tokens),
 		accused: extractAccused(textResponse),
-		caseStart: "",
+		caseStart: extractTimeline(tokens.slice(0)),
 	};
 };
 

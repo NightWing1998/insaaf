@@ -138,7 +138,11 @@ const Predict = (props) => {
 			{loading ? (
 				// <img src="https://tenor.com/view/scale-opposites-maybe-balance-gif-5526735" alt="Loading" />
 				<center>
-					<img src={law_loading} alt="Loading" style={{ marginTop: "30vh" }} />
+					<img
+						src={law_loading}
+						alt="Loading"
+						style={{ marginTop: "30vh" }}
+					/>
 				</center>
 			) : (
 				<>
@@ -161,79 +165,132 @@ const Predict = (props) => {
 						<Container>
 							{props.medium === "train" ? (
 								<>
-									<h1 className="title underline">Result for training</h1>
+									<h1 className="title underline">
+										Result for training
+									</h1>
 									{Object.keys(result).map((res, index) => (
-										<div key={index} style={{ margin: "1rem" }}>
+										<div
+											key={index}
+											style={{ margin: "1rem" }}
+										>
 											<h2 className="title">{res}</h2>
-											<p className="text">{result[res]}</p>
+											<p className="text">
+												{result[res]}
+											</p>
 										</div>
 									))}
 								</>
 							) : (
 								<div>
-									<h1 className="title underline">Sugesstions:</h1>
+									<h1 className="title underline">
+										Sugesstions:
+									</h1>
 									<br />
 									<Grid columns="equal" stackable>
 										<Grid.Row>
 											<Grid.Column>
-												<h2 className="title">Case Number:</h2>
+												<h2 className="title">
+													Case Number:
+												</h2>
 											</Grid.Column>
 											<Grid.Column>
-												<h2 className="title">{gist["caseNumber"]}</h2>
+												<h2 className="title">
+													{gist["caseNumber"]}
+												</h2>
 											</Grid.Column>
-											<Responsive minWidth={Responsive.onlyTablet.maxWidth + 1}>
+											<Responsive
+												minWidth={
+													Responsive.onlyTablet
+														.maxWidth + 1
+												}
+											>
 												<Divider vertical />
 											</Responsive>
 											<Responsive
-												minWidth={Responsive.onlyMobile.minWidth}
-												maxWidth={Responsive.onlyTablet.maxWidth}
+												minWidth={
+													Responsive.onlyMobile
+														.minWidth
+												}
+												maxWidth={
+													Responsive.onlyTablet
+														.maxWidth
+												}
 											>
 												<Divider horizontal />
 											</Responsive>
 											<Grid.Column>
-												<h2 className="title">Penal Codes:</h2>
+												<h2 className="title">
+													Penal Codes:
+												</h2>
 											</Grid.Column>
 											<Grid.Column>
-												<h2 className="title">{gist["penalCode"]}</h2>
-											</Grid.Column>
-											<Divider horizontal />
-										</Grid.Row>
-										<Grid.Row>
-											<Grid.Column>
-												<h2 className="title">Suspects:</h2>
-											</Grid.Column>
-											<Grid.Column>
-												<h2 className="title">{gist["accused"]}</h2>
+												<h2 className="title">
+													{gist["penalCode"]}
+												</h2>
 											</Grid.Column>
 											<Divider horizontal />
 										</Grid.Row>
 										<Grid.Row>
 											<Grid.Column>
-												<h2 className="title">Notion(suggestion):</h2>
+												<h2 className="title">
+													Suspects:
+												</h2>
 											</Grid.Column>
 											<Grid.Column>
-												<h2 className="title">{result["suggestion"]}</h2>
+												<h2 className="title">
+													{gist["accused"]}
+												</h2>
+											</Grid.Column>
+											<Divider horizontal />
+										</Grid.Row>
+										<Grid.Row>
+											<Grid.Column>
+												<h2 className="title">
+													Notion(suggestion):
+												</h2>
+											</Grid.Column>
+											<Grid.Column>
+												<h2 className="title">
+													{result["suggestion"]}
+												</h2>
 											</Grid.Column>
 											<br />
-											{result["suggestion"] === "guilty" ? (
+											{result["suggestion"] ===
+											"guilty" ? (
 												<>
 													<Responsive
-														minWidth={Responsive.onlyTablet.maxWidth + 1}
+														minWidth={
+															Responsive
+																.onlyTablet
+																.maxWidth + 1
+														}
 													>
 														<Divider vertical />
 													</Responsive>
 													<Responsive
-														minWidth={Responsive.onlyMobile.minWidth}
-														maxWidth={Responsive.onlyTablet.maxWidth}
+														minWidth={
+															Responsive
+																.onlyMobile
+																.minWidth
+														}
+														maxWidth={
+															Responsive
+																.onlyTablet
+																.maxWidth
+														}
 													>
 														<Divider horizontal />
 													</Responsive>
 													<Grid.Column>
-														<h2 className="title">Punishment(suggestion):</h2>
+														<h2 className="title">
+															Punishment(suggestion):
+														</h2>
 													</Grid.Column>
 													<Grid.Column>
 														<h2 className="title">
-															{result["punishment"].join(",")}
+															{result[
+																"punishment"
+															].join(",")}
 														</h2>
 													</Grid.Column>
 												</>
@@ -244,9 +301,17 @@ const Predict = (props) => {
 										</Grid.Row>
 										<Grid.Row textAlign="center">
 											<button className="btn">
-												<Link to="/" style={{ color: "inherit" }}>
-													<span style={{ color: "inherit" }}>
-														Go Back Gome <Icon name="angle double right" />
+												<Link
+													to="/"
+													style={{ color: "inherit" }}
+												>
+													<span
+														style={{
+															color: "inherit",
+														}}
+													>
+														Go Back Home{" "}
+														<Icon name="angle double right" />
 													</span>
 												</Link>
 											</button>
